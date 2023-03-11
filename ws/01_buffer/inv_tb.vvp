@@ -1,0 +1,43 @@
+#! /c/Source/iverilog-install/bin/vvp
+:ivl_version "12.0 (devel)" "(s20150603-1110-g18392a46)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision - 12;
+:vpi_module "C:\iverilog\lib\ivl\system.vpi";
+:vpi_module "C:\iverilog\lib\ivl\vhdl_sys.vpi";
+:vpi_module "C:\iverilog\lib\ivl\vhdl_textio.vpi";
+:vpi_module "C:\iverilog\lib\ivl\v2005_math.vpi";
+:vpi_module "C:\iverilog\lib\ivl\va_math.vpi";
+S_000002496f966900 .scope module, "inv_tb" "inv_tb" 2 5;
+ .timescale -9 -12;
+v000002496f966cc0_0 .var "a", 0 0;
+v000002496f96db10_0 .net "b", 0 0, L_000002496f966d60;  1 drivers
+S_000002496f966a90 .scope module, "u1" "inv" 2 9, 3 3 0, S_000002496f966900;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "a";
+    .port_info 1 /OUTPUT 1 "b";
+L_000002496f966d60 .functor NOT 1, v000002496f966cc0_0, C4<0>, C4<0>, C4<0>;
+v000002496f966c20_0 .net "a", 0 0, v000002496f966cc0_0;  1 drivers
+v000002496f815430_0 .net "b", 0 0, L_000002496f966d60;  alias, 1 drivers
+    .scope S_000002496f966900;
+T_0 ;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v000002496f966cc0_0, 0, 1;
+    %delay 10000, 0;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v000002496f966cc0_0, 0, 1;
+    %delay 20000, 0;
+    %vpi_call 2 14 "$finish" {0 0 0};
+    %end;
+    .thread T_0;
+    .scope S_000002496f966900;
+T_1 ;
+    %vpi_call 2 19 "$dumpfile", "inv_tb.vcd" {0 0 0};
+    %vpi_call 2 20 "$dumpvars", 32'sb00000000000000000000000000000000, S_000002496f966a90 {0 0 0};
+    %end;
+    .thread T_1;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "inv_tb.v";
+    "inv.v";
