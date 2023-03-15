@@ -4,7 +4,7 @@ output s;
 input y;
 
 // input 과 실행파일과 output을 이어주는 것들
-reg [1:0] a;
+reg [1:0] a; // 리스트로 2bits 변수를 선언
 reg s;
 wire y;
 
