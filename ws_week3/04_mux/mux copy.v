@@ -1,4 +1,4 @@
-module mux_2by1 (
+module mux_2by1_reg (
     input a, input b, input sel, output out
 );
 
