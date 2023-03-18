@@ -21,6 +21,7 @@ module mux_2by1 (
 wire out;
 
 // assign out = 1'b1; // (비트수)'(binary)(값)
+// registor level????
 assign out = sel ? b : a;
 
 endmodule
