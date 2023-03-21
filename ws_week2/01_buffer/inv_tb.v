@@ -6,7 +6,8 @@ module inv_tb(); //inv와 달리 시나리오를 넣을게 없다.
 reg a; //input 으로 보면된다.
 wire b; //output으로 보면된다.
 
-inv u1(a,b); //inv 모듈과 이어준다. inv를 이용하는 함수?의 이름
+//inv 모듈과 이어준다. inv를 이용하는 함수?의 이름
+inv u1(a,b);
 
 // stimulus = 테스트할 신호(파형)
 // ff에 대해서는 초깃값으로 initial을 쓰지 않는다. 리셋이 입력되면 사용한다.

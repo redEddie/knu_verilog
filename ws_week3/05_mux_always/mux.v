@@ -1,5 +1,8 @@
 module mux_2by1_reg(
-    input a, input b, input sel, output out
+    input a, 
+    input b, 
+    input sel, 
+    output out
 );
 
 reg out;
