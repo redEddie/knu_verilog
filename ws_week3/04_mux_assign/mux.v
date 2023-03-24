@@ -24,7 +24,7 @@ module mux_2by1_wire(
 wire out;
 
 // assign out = 1'b1; // (비트수)'(binary)(값)
-// registor transfer level : 레지스터에서 정보가 전달이 되는 걸 표현한 코드ㄴ
+// registor transfer level : 레지스터에서 정보가 전달이 되는 걸 표현한 코드
 assign out = sel ? b : a;
 
 endmodule
