@@ -5,6 +5,9 @@ module tb;
 // assign A = 4'b1111;
 reg [3:0] A;
 reg [3:0] B;
+wire [3:0] SUM;
+wire COUT;
+// 받을 때는 wire, 내줄 때는 reg
 
 adder dut1(
     // i/o를 지정할 때
@@ -12,8 +15,8 @@ adder dut1(
     // .a(A) 와 같이 지정해도 된다.
     .a(A),
     .b(B),
-    .cout(),
-    .sum()
+    .cout(COUT), //출력이니 wire
+    .sum(SUM)
 );
 
 // initial 로 풀어헤치는 방법, always로 ...
