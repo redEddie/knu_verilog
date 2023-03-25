@@ -29,9 +29,6 @@ initial begin // start from #0
     // if()
     A = 4'b0000;
     B = 4'b0000;
-
-    #100;
-    $finish;
 end
 
 // 어느 initial이든 동시에 출발한다. from #0.\
@@ -40,6 +37,11 @@ initial begin
     #150;
     A = 4'b0101;
     B = 4'b1010;
+end
+
+initial begin
+    #500;
+    $finish;
 end
 
 initial begin
