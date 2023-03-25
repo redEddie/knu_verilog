@@ -19,18 +19,24 @@ initial begin
     CMD = 2'b10; // cmd 4 add
     A = 4'h3;
     B = 4'h5;
-
+    
     #100
     CMD = 2'b00;
+    
     #100
     CMD = 2'b01;
+    
     #100
     CMD = 2'b11;
+
+    #100
+    A = 4'hA;
+    B = 4'h5;
 end
 
 initial begin
     $monitor($time, A, B); 
-    #500;
+    #700;
     $finish;
 end
 
