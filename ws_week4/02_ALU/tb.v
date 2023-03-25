@@ -7,10 +7,10 @@ reg [3:0] B;
 wire [3:0] OUT;
 
 ALU dut1(
-    .cmd(),
+    .cmd(CMD),
     .a(A),
     .b(B),
-    .out()
+    .out(OUT)
 );
 
 
