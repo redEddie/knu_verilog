@@ -21,8 +21,8 @@ adder dut1(
 initial begin
 
     #100
-    A = 4'b0001;
-    B = 4'b0010;
+    A = 4'b0001; // 4'h1
+    B = 4'b0010; // 4'h2
 
     #100
     // 입력 변환에 if()도 가능하다.
@@ -30,6 +30,7 @@ initial begin
     A = 4'b0000;
     B = 4'b0000;
 
+    #100;
     $finish;
 end
 
