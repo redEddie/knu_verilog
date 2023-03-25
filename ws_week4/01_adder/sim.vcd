@@ -1,5 +1,5 @@
 $date
-	Sat Mar 25 13:23:51 2023
+	Sat Mar 25 14:06:05 2023
 $end
 $version
 	Icarus Verilog
@@ -9,29 +9,25 @@ $timescale
 $end
 $scope module tb $end
 $scope module dut1 $end
-$var wire 1 ! a $end
-$var wire 1 " b $end
-$var wire 1 # sel $end
-$var wire 1 $ out $end
+$var wire 4 ! a [3:0] $end
+$var wire 4 " b [3:0] $end
+$var wire 1 # cout $end
+$var wire 4 $ sum [3:0] $end
 $upscope $end
 $upscope $end
 $enddefinitions $end
 #0
 $dumpvars
-x$
-x#
-x"
-x!
+bx $
+z#
+bx "
+bx !
 $end
 #100
-1$
-0#
-0"
-1!
+b11 $
+b10 "
+b1 !
 #200
-0$
-1#
-#300
-0#
-0!
-#420
+b0 "
+b0 $
+b0 !

@@ -16,6 +16,8 @@ adder dut1(
     .sum()
 );
 
+// initial 로 풀어헤치는 방법, always로 ...
+// 둘 다 내부는 reg만 와야 한다.
 initial begin
 
     #100
@@ -24,9 +26,9 @@ initial begin
 
     #100
     // 입력 변환에 if()도 가능하다.
-    if()
-        A = 4'b0000;
-        B = 4'b0000;
+    // if()
+    A = 4'b0000;
+    B = 4'b0000;
 
     $finish;
 end
