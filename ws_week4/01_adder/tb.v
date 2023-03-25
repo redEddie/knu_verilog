@@ -34,6 +34,13 @@ initial begin // start from #0
     $finish;
 end
 
+// 어느 initial이든 동시에 출발한다. from #0.
+initial begin
+    #150;
+    A = 4'b0101;
+    B = 4'b1010;
+end
+
 initial begin
     $dumpfile("sim.vcd");
     $dumpvars(0,dut1);
