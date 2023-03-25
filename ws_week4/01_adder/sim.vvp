@@ -1,0 +1,62 @@
+#! /c/Source/iverilog-install/bin/vvp
+:ivl_version "12.0 (devel)" "(s20150603-1110-g18392a46)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "C:\iverilog\lib\ivl\system.vpi";
+:vpi_module "C:\iverilog\lib\ivl\vhdl_sys.vpi";
+:vpi_module "C:\iverilog\lib\ivl\vhdl_textio.vpi";
+:vpi_module "C:\iverilog\lib\ivl\v2005_math.vpi";
+:vpi_module "C:\iverilog\lib\ivl\va_math.vpi";
+S_0000015db00f51a0 .scope module, "tb" "tb" 2 2;
+ .timescale 0 0;
+v0000015db00abd30_0 .var "A", 0 0;
+v0000015db00abdd0_0 .var "B", 0 0;
+v0000015db00abe70_0 .net "OUT", 0 0, L_0000015db00f1de0;  1 drivers
+v0000015db00abf10_0 .var "SEL", 0 0;
+S_0000015db00f5330 .scope module, "dut1" "adder" 2 7, 3 1 0, S_0000015db00f51a0;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "a";
+    .port_info 1 /INPUT 1 "b";
+    .port_info 2 /INPUT 1 "sel";
+    .port_info 3 /OUTPUT 1 "out";
+v0000015db00a7390_0 .net "a", 0 0, v0000015db00abd30_0;  1 drivers
+v0000015db00a6ec0_0 .net "b", 0 0, v0000015db00abdd0_0;  1 drivers
+v0000015db00f54c0_0 .net "out", 0 0, L_0000015db00f1de0;  alias, 1 drivers
+v0000015db00f5560_0 .net "sel", 0 0, v0000015db00abf10_0;  1 drivers
+L_0000015db00f1de0 .functor MUXZ 1, v0000015db00abd30_0, v0000015db00abdd0_0, v0000015db00abf10_0, C4<>;
+    .scope S_0000015db00f51a0;
+T_0 ;
+    %delay 100, 0;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v0000015db00abd30_0, 0, 1;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0000015db00abdd0_0, 0, 1;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0000015db00abf10_0, 0, 1;
+    %delay 100, 0;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v0000015db00abf10_0, 0, 1;
+    %delay 100, 0;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0000015db00abd30_0, 0, 1;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0000015db00abf10_0, 0, 1;
+    %delay 20, 0;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0000015db00abd30_0, 0, 1;
+    %delay 100, 0;
+    %vpi_call 2 32 "$finish" {0 0 0};
+    %end;
+    .thread T_0;
+    .scope S_0000015db00f51a0;
+T_1 ;
+    %vpi_call 2 36 "$dumpfile", "sim.vcd" {0 0 0};
+    %vpi_call 2 37 "$dumpvars", 32'sb00000000000000000000000000000000, S_0000015db00f5330 {0 0 0};
+    %end;
+    .thread T_1;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "tb.v";
+    "adder.v";
