@@ -9,6 +9,8 @@ module adder(
 // wire cout;
 
 // c언어는 한 번만 함수를 실행하기 때문에, 변수의 변화가 새로운 출력을 만들지 못 한다.
-assign sum = a+b; // assign 은 sum과 a+b를 이어주는거
+// assign 은 sum과 a+b를 이어주는거
+// * continuous assignment *
+assign sum = a+b; 
 
 endmodule
