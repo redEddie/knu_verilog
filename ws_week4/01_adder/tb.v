@@ -1,14 +1,19 @@
 // 원래 i/o 없다.
 module tb;
 
-reg A, B, SEL;
-wire OUT;
+wire [3:0] A;
+// assign 으로 ref처럼 A를 고정할 수 도 있다.
+assign A = 4'b1111;
 
 adder dut1(
-    .a(A),
-    .b(B),
-    .sel(SEL),
-    .out(OUT)
+    // i/o를 지정할 때
+    // input, output을 각각 지정해도 되고,
+    // .a(A) 와 같이 지정해도 되고,
+    // .a() 와 같이 지정해도 된다.
+    .a(),
+    .b(),
+    .cout(),
+    .sum()
 );
 
 initial begin

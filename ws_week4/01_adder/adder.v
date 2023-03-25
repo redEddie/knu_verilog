@@ -14,4 +14,9 @@ wire cout;
 // * continuous assignment *
 assign sum = a+b; 
 
+// rtl 과 behavior lock의 always, if
+// if문에서 else를 작성하지 않으면 unexpacted latch가 뜬다.
+
+
+
 endmodule
