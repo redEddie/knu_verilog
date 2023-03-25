@@ -1,15 +1,16 @@
 module tb;
 
+reg [1:0] CMD;
 reg [3:0] A;
 reg [3:0] B;
-wire [3:0] SUM;
-wire COUT;
 
-adder dut1(
+wire [3:0] OUT;
+
+ALU dut1(
+    .cmd(),
     .a(A),
     .b(B),
-    .cout(COUT),
-    .sum(SUM)
+    .out()
 );
 
 
