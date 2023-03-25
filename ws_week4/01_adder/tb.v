@@ -18,7 +18,7 @@ adder dut1(
 
 // initial 로 풀어헤치는 방법, always로 ...
 // 둘 다 내부는 reg만 와야 한다.
-initial begin
+initial begin // start from #0
 
     #100
     A = 4'b0001; // 4'h1
