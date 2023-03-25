@@ -1,4 +1,4 @@
-module alu(
+module ALU(
     input [1:0] cmd,
     input [3:0] a,
     input [3:0] b,

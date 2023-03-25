@@ -15,20 +15,10 @@ ALU dut1(
 
 
 initial begin 
-
     #100
-    A = 4'b0001; 
-    B = 4'b0010; 
-
-    #100
-    A = 4'b0000;
-    B = 4'b0000;
-end
-
-initial begin
-    #150;
-    A = 4'b0101;
-    B = 4'b1010;
+    CMD = 2'b10; // cmd 4 add
+    A = 4'h3;
+    B = 4'h5;
 end
 
 initial begin
