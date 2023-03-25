@@ -34,7 +34,8 @@ initial begin // start from #0
     $finish;
 end
 
-// 어느 initial이든 동시에 출발한다. from #0.
+// 어느 initial이든 동시에 출발한다. from #0.\
+// 이렇게 하는 이유는 신호를 쪼개서 넣으면 너무 복잡하기 때문에 시나리오를 나누는거다.
 initial begin
     #150;
     A = 4'b0101;
