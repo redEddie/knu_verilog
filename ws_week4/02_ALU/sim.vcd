@@ -1,5 +1,5 @@
 $date
-	Sat Mar 25 15:12:10 2023
+	Fri Mar 31 08:48:55 2023
 $end
 $version
 	Icarus Verilog
@@ -9,20 +9,22 @@ $timescale
 $end
 $scope module tb $end
 $scope module dut1 $end
-$var wire 4 ! RESAND [3:0] $end
-$var wire 4 " RESOR [3:0] $end
-$var wire 4 # RESSUB [3:0] $end
-$var wire 4 $ a [3:0] $end
-$var wire 4 % b [3:0] $end
-$var wire 2 & cmd [1:0] $end
-$var wire 4 ' out [3:0] $end
-$var wire 4 ( RESADD [3:0] $end
-$var wire 1 ) COUT $end
+$var wire 4 ! RES_AND [3:0] $end
+$var wire 4 " RES_OR [3:0] $end
+$var wire 4 # a [3:0] $end
+$var wire 4 $ b [3:0] $end
+$var wire 2 % cmd [1:0] $end
+$var wire 4 & out [3:0] $end
+$var wire 4 ' RES_SUB [3:0] $end
+$var wire 4 ( RES_ADD [3:0] $end
+$var wire 1 ) C_OUT $end
+$var wire 1 * B_OUT $end
 $upscope $end
 $upscope $end
 $enddefinitions $end
 #0
 $dumpvars
+x*
 x)
 bx (
 bx '
@@ -34,13 +36,45 @@ bx "
 bx !
 $end
 #100
-b1000 '
+b1000 &
 b1000 (
 0)
+b1110 '
+1*
 b1 !
-b1 "
-b1 #
-b101 %
-b11 $
-b10 &
+b111 "
+b101 $
+b11 #
+b10 %
+#200
+b1 &
+b0 %
+#300
+b111 &
+b1 %
+#400
+b1110 &
+b11 %
 #500
+b101 &
+b0 !
+b1111 "
+b1111 (
+b101 '
+0*
+b1010 #
+#600
+b1011 &
+b1010 !
+b1001 (
+1)
+b1011 '
+1*
+b1111 $
+#700
+b101 &
+b101 '
+0*
+b1010 $
+b1111 #
+#1000

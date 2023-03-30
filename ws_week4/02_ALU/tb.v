@@ -32,11 +32,17 @@ initial begin
     #100
     A = 4'hA;
     B = 4'h5;
+    #100
+    A = 4'hA;
+    B = 4'b1111;
+    #100
+    A = 4'b1111;
+    B = 4'hA;
 end
 
 initial begin
-    $monitor($time, A, B); 
-    #700;
+    $monitor("tick : %0d, a : %b, b : %b", $time, A, B); 
+    #800;
     $finish;
 end
 

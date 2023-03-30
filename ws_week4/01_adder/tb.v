@@ -46,7 +46,9 @@ end
 initial begin
     $monitor($time, A, B); // 굳이 gui로 보지 않아도, 변화가 감지되어 text로 변화가 출력된다.
     // $display 도 있다. display는 text출력의 포맷을 커스텀기능이 있다.
+    $display("tick:%0d A : %b B : %b",$time, A, B);
     #500;
+    $strobe($time, A, B); 
     $finish;
 end
 
