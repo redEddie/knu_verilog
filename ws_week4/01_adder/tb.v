@@ -8,6 +8,7 @@ reg [3:0] B;
 wire [3:0] SUM;
 wire COUT;
 // 받을 때는 wire, 내줄 때는 reg
+// 쉽게 이해하기 tb 안에 main이 있다고 생각하면 main의 입력은 tb가 넣어줘야(출력) 되고, main의 출력은 tb가 받아줘야 한다.
 
 adder dut1(
     // i/o를 지정할 때
