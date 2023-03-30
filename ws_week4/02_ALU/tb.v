@@ -41,7 +41,7 @@ initial begin
 end
 
 initial begin
-    $monitor("tick : %0d, a : %b, b : %b", $time, A, B); 
+    $monitor("tick : %3d, a : %b, b : %b", $time, A, B); 
     #800;
     $finish;
 end

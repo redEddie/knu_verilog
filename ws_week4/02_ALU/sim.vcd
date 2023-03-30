@@ -1,5 +1,5 @@
 $date
-	Fri Mar 31 08:48:55 2023
+	Fri Mar 31 08:56:57 2023
 $end
 $version
 	Icarus Verilog
@@ -77,4 +77,4 @@ b101 '
 0*
 b1010 $
 b1111 #
-#1000
+#800
