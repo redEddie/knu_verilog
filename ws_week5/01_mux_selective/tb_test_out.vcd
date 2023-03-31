@@ -1,0 +1,40 @@
+$date
+	Fri Mar 31 13:38:45 2023
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module tb_testbench $end
+$scope module dut1 $end
+$var wire 1 ! a $end
+$var wire 1 " b $end
+$var wire 1 # sel $end
+$var wire 1 $ out $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+x$
+x#
+x"
+x!
+$end
+#100
+1$
+0#
+0"
+1!
+#200
+0$
+1#
+#300
+0#
+0!
+#320
+1$
+1!
+#420
