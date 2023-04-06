@@ -8,7 +8,7 @@ reg A, B, SEL;
 wire OUT;
 
 `ifdef COM1
-mux_2by1_wire dut1( // 변수이름이 같으면 안 된다. => define 사용
+mux_2by1_wire dut1( // 변수이름이 같으면 안 된다. => define 사용 이유
     .a(A),
     .b(B),
     .sel(SEL),
@@ -47,7 +47,7 @@ end
 
 initial begin
     $dumpfile("tb_test_out.vcd");
-    $dumpvars(0,dut1); // 이것 또한 고쳐야한다. => define사용
+    $dumpvars(0,dut1); // 이것 또한 고쳐야한다. => define사용 이유
 end
 
 endmodule
