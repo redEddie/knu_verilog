@@ -45,6 +45,7 @@ initial begin
     #150 RESET_B    = 1'b1; // reset release
     #100 ENABLE1     = 1'b1; // 250ns from zero time
     #400 READ1       = 1'b1;
+    RESET_B = 1'b0;
     #100 READ1       = 1'b0;
     #500 READ1       = 1'b1;
     #100 READ1       = 1'b0;
