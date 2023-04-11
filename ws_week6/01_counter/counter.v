@@ -19,7 +19,7 @@ assign data = read ? count : 8'bz; // floating 상태로 만들어야 신호를 
 always @(negedge reset_b or posedge clk) // negative edge에서~
     if(~reset_b)
         // 실제로는 8bits의 flip-flop이 전체적으로 초기화 되기 충분한 시간이 필요하다. setup margin, setup violation(불완전한 데이터가 전달되는 것)
-        count <= 8'b11; // 0을 7개 채우면 부족해서 error인건 알겠는데, 0말고 11넣으면 3으로 보는지 11로 볼지.
+        count <= 8'b0; // 0을 7개 채우면 부족해서 error이다. 0말고 11넣으면 3으로 본다.
     else if(enable)
         count <= count + 1;
     // else 없어도 된다.
