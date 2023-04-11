@@ -1,3 +1,4 @@
+// config file에 define이 있다 => 컴파일 순서에 유의
 // `timescale 1ns/1ps
 // counter 2개가 1개의 data bus에 올라간걸 구현 => 다른 시간 대에 read하면 된다.
 
