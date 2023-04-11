@@ -13,7 +13,7 @@ module counter(
 reg [7:0] count;
 // wire [7:0] data;
 
-assign data = read ? count : 8'bz; // floating 상태로 만들어야 신호를 왜곡없이 입력해줄 수 있다.
+assign data = read ? count : 8'bz; // high-z 상태로 만들어야 신호를 왜곡없이 입력해줄 수 있다.
 
 // FF으로 설계된.(negedge, posedge)
 always @(negedge reset_b or posedge clk) // negative edge에서~
