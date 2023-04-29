@@ -1,3 +1,7 @@
+/*
+https://jamboard.google.com/d/1-HRD5jC9OJBApIVmR7xz3oLNlFpbC5Wj01Q-bl0ocPk/edit?usp=sharing
+*/
+
 module tb_testbench;
 
 reg CLK, RESETB;
