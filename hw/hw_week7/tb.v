@@ -43,6 +43,7 @@ end
 initial begin
     #500 RESETB = 1'b1; // reset release
     #300 RESETB = 1'b0;
+
     #200 RESETB = 1'b1;
 end
 
