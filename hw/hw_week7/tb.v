@@ -24,8 +24,9 @@ parent p1(
 initial begin
     CLK     = 1'b0;
     RESETB  = 1'b0;
+    
 
-    $monitor($time, CLK, RESETB, "REQUEST : %b, MEAL : %b, BOOK : %b", REQUEST, MEAL, BOOK); 
+    $monitor($time, CLK, RESETB, " REQUEST : %b, MEAL : %b, BOOK : %b", REQUEST, MEAL, BOOK); 
     #`FTIME;
     $finish;
 end

@@ -41,7 +41,7 @@ module kid (
                 next_state <= `S1;
             else
                 next_state <= `S0; // 밥없으면 => 여전히 배고픔.
-        if(state == `S1) // 배가 부르면 => 책을 먹고 => 배가 고파짐.
+        else if(state == `S1) // 배가 부르면 => 책을 먹고 => 배가 고파짐.
             if(book == 1'b1)
                 next_state <= `S2;
             else

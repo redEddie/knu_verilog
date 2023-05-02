@@ -39,18 +39,46 @@ always @(*)
         next_state <= state;
 
 // 4. output logic
-always @(negedge resetb or posedge clk)
-    if(~resetb)
+// always @(negedge resetb or posedge clk)
+//     if(~resetb)
+//         state <= `P0; // 리셋당하면 initial state로 돌아감.
+//         food <= 1'b0; // 밥 그만 출력. 
+//         book <= 1'b0; // 책 그만 출력.
+//     else if (state == `P0)
+//         food <= 1'b0; // 밥 그만 출력. 
+//         book <= 1'b0; // 책 그만 출력.
+//     else if(state == `P1)
+//         food <= 1'b1; // 밥 출력.
+//     else if(state == `P2)
+//         food <= 1'b0; // 밥 그만 출력. 
+//         book <= 1'b1; // 책 출력. 
+//     else
+//         food <= 1'b0; // 밥 그만 출력. 
+//         book <= 1'b0; // 책 그만 출력.
+
+always @(negedge resetb or posedge clk) begin
+    if(~resetb) begin
         state <= `P0; // 리셋당하면 initial state로 돌아감.
         food <= 1'b0; // 밥 그만 출력. 
         book <= 1'b0; // 책 그만 출력.
-    else if(state == `P1)
-        food <= 1'b1; // 밥 출력.
-    else if(state == `P2)
+    end
+    else if (state == `P0) begin
+        food <= 1'b0; // 밥 그만 출력. 
+        book <= 1'b0; // 책 그만 출력.
+    end
+    else if(state == `P1) begin
+        food <= 1'b1; // Output food.
+        book <= 1'b0; // Stop book output.
+    end
+    else if(state == `P2) begin
         food <= 1'b0; // 밥 그만 출력. 
         book <= 1'b1; // 책 출력. 
-
-
+    end
+    else begin
+        food <= 1'b0; // 밥 그만 출력. 
+        book <= 1'b0; // 책 그만 출력.
+    end
+end
 
 endmodule
 
