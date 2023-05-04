@@ -57,19 +57,23 @@ always @(*)
 //         book <= 1'b0; // 책 그만 출력.
 
 always @(negedge resetb or posedge clk) begin
-    if(~resetb)
+    if(~resetb) begin
         state <= `P0; // 리셋당하면 initial state로 돌아감.
         food <= 1'b0; // 밥 그만 출력. 
         book <= 1'b0; // 책 그만 출력.
-    else if (state == `P0)
+        end
+    else if (state == `P0) begin
         food <= 1'b0; // 밥 그만 출력. 
         book <= 1'b0; // 책 그만 출력.
-    else if(state == `P1)
+        end
+    else if(state == `P1) begin
         food <= 1'b1; // Output food.
         book <= 1'b0; // Stop book output.
-    else if(state == `P2)
+        end
+    else if(state == `P2) begin
         food <= 1'b0; // 밥 그만 출력. 
         book <= 1'b1; // 책 출력. 
+        end
     else
         food <= 1'b0; // 밥 그만 출력. 
         book <= 1'b0; // 책 그만 출력.
