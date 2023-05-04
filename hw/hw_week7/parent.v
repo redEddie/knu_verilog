@@ -20,9 +20,9 @@ module parent (
 // 2. state logic
 always @(negedge resetb or posedge clk)
     if(~resetb)
-        state <= `P0;                       // 리셋당하면 initial state로 돌아감.
+        state <= `P0;                // 리셋당하면 initial state로 돌아감.
     else 
-        next_state <= state;
+        state <= next_state;
 
 // 3. next state logic
 always @(*)

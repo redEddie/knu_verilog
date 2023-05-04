@@ -47,8 +47,8 @@ module kid (
                 next_state <= `S1;
         else if(state == `S2)           // 공부 중
             next_state <= `S0;
-        else
-            next_state <= state;        // 혹시 모를 에러에 대비. 현재 반복.
+        // else
+        //     next_state <= state;        // 혹시 모를 에러에 대비. 현재 반복.
     
 
 // 4. output logic

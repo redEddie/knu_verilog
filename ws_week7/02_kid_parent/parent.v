@@ -12,6 +12,14 @@ module parent (
     reg next_state;
     reg food; 
 
+
+// state logic
+    always @(negedge resetb or posedge clk)
+        if(~resetb)
+            state <= `P0; 
+        else
+            state <= next_state; 
+
 // next state determination
     always @(*)
         if(state == `P0) // sleep(default)
@@ -27,7 +35,7 @@ module parent (
         else
             next_state <= state;
     
-// So, final state may be set a rising clock.
+// output logic
     always @(negedge resetb or posedge clk)
         if(~resetb)
             state <= `P0;
@@ -36,15 +44,6 @@ module parent (
         else
             food <= 1'b0; // cut food
 
-// given state, lets define output
-always @(negedge resetb or posedge clk) begin
-    if(~resetb)
-        food <= 1'b0;
-    else if(state == `P0)
-        food <= 1'b1; // please give me meal
-    else if(state == `P1)
-        food <= 1'b0; // don't feed me. im full
-end
 
 endmodule
 

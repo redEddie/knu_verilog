@@ -2,7 +2,7 @@ module tb_testbench;
 
 reg CLK, RESETB;
 
-wire MEAL, REQUEST, BOOK;
+// wire MEAL, REQUEST, BOOK;
 
 kid k1(
     .clk     (CLK),
