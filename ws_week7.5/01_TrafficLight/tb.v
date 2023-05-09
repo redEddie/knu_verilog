@@ -50,6 +50,14 @@ initial begin
     #500;
     CAR0 = 1'b0;
     CAR1 = 1'b0;    // S2 => S3 => S0
+    
+    #500;
+    CAR0 = 1'b0;
+    CAR1 = 1'b1;    
+    
+    #500;
+    CAR0 = 1'b0;
+    CAR1 = 1'b0;    
 
 end
 

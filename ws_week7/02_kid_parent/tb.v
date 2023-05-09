@@ -26,7 +26,9 @@ parent p1(
 initial begin
     CLK     = 1'b0;
     RESETB  = 1'b0;
-    // MEAL = 1'b0; 얘네는 설정하면 안 된담. wire라서
+    
+    // 얘네는 설정하면 안 된담. wire라서
+    // MEAL = 1'b0; 
     // REQUEST = 1'b0;
 
     $monitor($time, CLK,  RESETB, MEAL, REQUEST);
