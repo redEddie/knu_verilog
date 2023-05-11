@@ -18,6 +18,7 @@ always @(negedge reset_b or posedge clk)
     else if(enable == 1'b1)
         count <= count + 1;
 
+// 동작 확인용
 always @(negedge reset_b or posedge clk)
     if(~reset_b)
         ref_count <= 8'b0; 

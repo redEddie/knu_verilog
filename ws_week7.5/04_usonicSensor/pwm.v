@@ -24,6 +24,7 @@ reg pwm;
 
 reg [7:0] count;
 
+// 카운터
 always @(negedge resetb or posedge clk)
     if(~resetb)
         count <= 8'b0; 
@@ -73,6 +74,7 @@ always @(negedge resetb or posedge clk) begin
 end    
 
 // for error fixing. 하나의 freq가 끝나기 전에 duty가 바뀌지 않도록 만듬.
+// 하나의 상태마다 하나의 freq가 진행됨.
 always @(negedge resetb or posedge clk) begin
     if (~resetb)
         pduty <= 4'b0;
