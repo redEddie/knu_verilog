@@ -5,7 +5,7 @@
 // counter 수정 완.
 // reset_b가 동작한 이후에 세기 시작하므로 한 클럭 느리게 동작하게 된다.
 
-// `define COUNTER 
+`define COUNTER 
 // `if COUNTER
 /*
 module counter cnt(

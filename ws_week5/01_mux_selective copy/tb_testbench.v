@@ -39,7 +39,7 @@ end
 
 initial begin
     $dumpfile("tb_test_out.vcd");
-    $dumpvars(0,dut1); // 이것 또한 고쳐야한다. => define사용
+    $dumpvars(0,dut1); // 모듈 바꿔서 돌릴려면 이것 또한 고쳐야한다. 고치기 싫으면 ₩define 쓰든가
 end
 
 endmodule
