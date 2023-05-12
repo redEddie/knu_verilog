@@ -1,8 +1,7 @@
+// 1. state 정의
 `define U0 0
 `define U1 1
 `define U2 2
-
-
 
 module usonic (
     input       clk,
@@ -11,14 +10,13 @@ module usonic (
     output      pwm
 );
 
-
 reg [1:0] state;
 reg [1:0] next_state;
 
 reg       pen;
 reg [3:0] duty;
 
-// next state
+// 2. next state
 always @ (*)
     if (state == `U0)
         if(range<20 )
@@ -41,11 +39,9 @@ always @ (*)
             next_state <= `U2;
         else 
             next_state <= `U1;
-    // else
-    //     next_state <= state;
 
 
-// update state
+// 3. update state
 always @(negedge resetb or posedge clk) begin
     if(~resetb)
         state <= `U0;
@@ -54,8 +50,7 @@ always @(negedge resetb or posedge clk) begin
 end
 
 
-// output change (PEN, DUTY)
-
+// 4. output change (PEN, DUTY)
 // PEN 출력 담당.
 always @(negedge resetb or posedge clk) begin
     if(~resetb)
@@ -86,8 +81,6 @@ pwm p1(
     .duty(duty),
     .freq(4'd15),
     .pwm(pwm) // 출력은 그대로 받아오는 것임.
-
-
 );
 
 
