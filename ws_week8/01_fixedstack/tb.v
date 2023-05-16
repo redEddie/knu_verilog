@@ -39,6 +39,7 @@ initial begin
 end
 
 initial begin // test condition
+    #20
     #100 RESETB = 1'b1; // reset release
 
     #100 DATAIN = 10; PUSH = 1;

@@ -30,11 +30,12 @@ wire empty;
 assign empty = (sp == 0) ? 1'b1 : 1'b0; // 8개까지 왔다면 버퍼7번이다. (0부터 있음)
 
 
-/*
+
 // 버퍼를 만듬과 버퍼의 크기를 설정
 reg [7:0] buffer[0:7]; // 8비트가 0~7까지 8개 있다 = 버퍼가 8개다.
-위험한? 코드니까 아래처럼 하라고 하네.
-*/
+// 위험한? 코드니까 아래처럼 하라고 하네.
+
+/*
 reg [7:0] buffer0;
 reg [7:0] buffer1;
 reg [7:0] buffer2;
@@ -43,6 +44,7 @@ reg [7:0] buffer4;
 reg [7:0] buffer5;
 reg [7:0] buffer6;
 reg [7:0] buffer7;
+*/
 
 // always 안에서 계산하지 말자. 조건은 밖에서 처리하도록.
 wire writeen;
@@ -63,7 +65,7 @@ end
 
 
 
-/*
+
 // push 동작
 always @(posedge clk or negedge resetb) begin
     if(~resetb)
@@ -71,7 +73,8 @@ always @(posedge clk or negedge resetb) begin
     else if(writeen)
         buffer[sp] <= datain;
 end
-*/
+
+/*
 wire buffer0_en;
 assign buffer0_en = (sp == 0) & writeen;
 always @(posedge clk or negedge resetb) begin
@@ -136,7 +139,7 @@ always @(posedge clk or negedge resetb) begin
     else if(buffer7_en)
         buffer7 <= datain;
 end
-
+*/
 
 
 
@@ -152,69 +155,36 @@ end
 wire out0_en;
 assign out0_en = (sp == 1) & outputen;
 
-// always @(posedge clk or negedge resetb) begin
-//     if(~resetb)
-//         buffer0 <= 0;
-//     else if(buffer7_en)
-//         buffer0 <= datain;
-// end
 wire out1_en;
 assign out1_en = (sp == 2) & outputen;
-// always @(posedge clk or negedge resetb) begin
-//     if(~resetb)
-//         buffer1 <= 0;
-//     else if(buffer1_en)
-//         buffer1 <= datain;
-// end
+
 wire out2_en;
 assign out2_en = (sp == 3) & outputen;
-// always @(posedge clk or negedge resetb) begin
-//     if(~resetb)
-//         buffer2 <= 0;
-//     else if(buffer2_en)
-//         buffer2 <= datain;
-// end
+
 wire out3_en;
 assign out3_en = (sp == 4) & outputen;
-// always @(posedge clk or negedge resetb) begin
-//     if(~resetb)
-//         buffer3 <= 0;
-//     else if(buffer3_en)
-//         buffer3 <= datain;
-// end
+
 wire out4_en;
 assign out4_en = (sp == 5) & outputen;
-// always @(posedge clk or negedge resetb) begin
-//     if(~resetb)
-//         buffer4 <= 0;
-//     else if(buffer4_en)
-//         buffer4 <= datain;
-// end
+
 wire out5_en;
 assign out5_en = (sp == 6) & outputen;
-// always @(posedge clk or negedge resetb) begin
-//     if(~resetb)
-//         buffer5 <= 0;
-//     else if(buffer5_en)
-//         buffer5 <= datain;
-// end
+
 wire out6_en;
 assign out6_en = (sp == 7) & outputen;
-// always @(posedge clk or negedge resetb) begin
-//     if(~resetb)
-//         buffer6 <= 0;
-//     else if(buffer7_en)
-//         buffer6 <= datain;
-// end
+
 wire out7_en;
 assign out7_en = (sp == 8) & outputen;
-// always @(posedge clk or negedge resetb) begin
-//     if(~resetb)
-//         buffer7 <= 0;
-//     else if(buffer7_en)
-//         buffer7 <= datain;
-// end
 
+
+always @(posedge clk or negedge resetb) begin
+    if(~resetb)
+        dataout <= 0;
+    else if (outputen)
+        dataout <= buffer[sp-1];            // 얘가 오동작의 원인.
+    
+end
+/*
 always@(negedge resetb or posedge clk)
     if(~resetb)
         dataout <= 0;
@@ -234,8 +204,7 @@ always@(negedge resetb or posedge clk)
         dataout <= buffer6;
     else if(out7_en)
         dataout <= buffer7;
-
-
+*/
 /*
 assign dataout = (out0_en) ? buffer0 :
                  (out1_en) ? buffer1 :
@@ -244,7 +213,8 @@ assign dataout = (out0_en) ? buffer0 :
                  (out4_en) ? buffer4 :
                  (out5_en) ? buffer5 :
                  (out6_en) ? buffer6 :
-                 (out7_en) ? buffer7 : 0; */
+                 (out7_en) ? buffer7 : 0;
+*/
 
 /*
 동작조건 이상하게 하지말자..
