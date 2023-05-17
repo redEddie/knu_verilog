@@ -29,6 +29,7 @@ initial begin // 초기화 구문
     $finish;
 end
 
+
 always begin // 100ns period pulse
     #50 CLK = ~CLK; 
 end
