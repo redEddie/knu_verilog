@@ -1,0 +1,36 @@
+$date
+	Tue May 23 20:11:29 2023
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module firstStage $end
+$var wire 65 ! v1 [64:0] $end
+$var reg 32 " mu1 [31:0] $end
+$var reg 1 # reset $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+x#
+bx "
+bx !
+$end
+#10
+b11111111111111111111111111111111111111110000100000010000101100010 !
+b1001001000111100110 "
+0#
+#20
+1#
+#30
+0#
+#40
+1#
+#50
+0#
+#60
+1#
+#70
