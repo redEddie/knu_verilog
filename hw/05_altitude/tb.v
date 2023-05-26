@@ -47,6 +47,7 @@ reg CLK;
 reg RESETB;
 
 // integration 관련 메모리
+reg [N-1:0] SIGNAL_INPUT;
 reg START_INTEGRATION;
 
 wire [N-1:0] INTEGRAL_RESULT;
@@ -62,6 +63,7 @@ initial begin
     RESETB = 0;
     CLK = 0;
 
+    SIGNAL_INPUT = 0;
     START_INTEGRATION = 0;
 
     elapsed = 0;
@@ -74,7 +76,7 @@ end
 
 always begin
     elapsed <= elapsed + 1;
-    #1000000 $display("시간 : %f", elapsed);
+    #1000 $display("시간 : %f", elapsed);
 end
 /*
 always @(*) begin
@@ -84,7 +86,7 @@ end
 */
 initial begin
     // #10_000000 $finish;
-    #168_000000 $finish;
+    #168_000 $finish;
 end
 
 always begin
