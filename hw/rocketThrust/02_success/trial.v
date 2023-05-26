@@ -35,7 +35,8 @@ initial begin
     #10
     $display("연소 후 무게 : %f", afterWeight);
     $display("질량비 : %f", mu);
-    $display("절댓값 ln 질량비 : %f", lnmu);
+    $display("절댓값 ln 질량비 : %f", lnmu*SF*SF*SF);
+    $display("유효배기속도 : %f", uprime*SF);
     $display("최종속도 : %f", velocity);
     $display("최종속도 : %f", (velocity*SF*SF*SF*SF));
 end

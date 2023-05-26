@@ -1,6 +1,6 @@
 module tb;
 
-trial CAL1(
+getVelocity getVelocity_1(
     .velocity(VELOCITY),
     .afterWeight(AFTERWEIGHT),
     .specificImpulse(SPECIFICIMPULSE),
@@ -11,12 +11,21 @@ trial CAL1(
     .resetb(RESETB)
 );
 
+numericalIntegral integration_1(
+    .clk(CLK),
+    .resetb(RESETB),
+    .signal_input(VELOCITY),
+    .start_integration(START_INTEGRATION),
+    .integral_result(INTEGRAL_RESULT)
+);
+
+// velocity 관련 메모리
 localparam GRAVITY = 9_799;
 localparam SF = 10.0**-3.0;
 localparam ISF = 10.0**3.0; // 얘를 곱하면 소수 3째자리 계산하겠단 의미가 된다.
 
-wire [127:0] VELOCITY;
-wire [127:0] AFTERWEIGHT;
+wire [63:0] VELOCITY;
+wire [63:0] AFTERWEIGHT;
     
 reg [63:0] SPECIFICIMPULSE;
 reg [63:0] INITIALWEIGHT;
@@ -25,29 +34,44 @@ reg [63:0] BURNTIME;
 reg CLK;
 reg RESETB;
 
+// integration 관련 메모리
+reg [`N-1:0] SIGNAL_INPUT;
+reg START_INTEGRATION;
+
+wire [`N-1:0] INTEGRAL_RESULT;
+
+reg [63:0] elapsed;
 
 initial begin
     SPECIFICIMPULSE = 263;
     INITIALWEIGHT = 3233500;
     PROPELLENTWEIGHT = 2077000;
     BURNTIME = 168;
+
     RESETB = 0;
     CLK = 0;
+
+    SIGNAL_INPUT = 0;
+    START_INTEGRATION = 0;
+
+    elapsed = 0;
 end
 
 initial begin
-#10 RESETB = 1;
-    // $display("질량비 : %f", mu1);
-    // $display("ln질량비? : %f", lnmu);
-    // $display("질량비의 ln : %f", $ln(mu1)); // 질량비가 문제다. 이거 원래 1보다 작아 음수가 나오는데
-    // $display("유효배출속도의 1e6 : %f", uprime);
-    // $display("유효배출속도는 : %f", uprime * SF * SF);
-    // $display("중력가속도 1e3 : %f", GRAVITY);
-    // $display("중력가속도 : %f", GRAVITY*SF);
-    // $display("최종속도 : %f", $itor(VELOCITY*SF*SF*SF));
-    // $display("최종속도 : %f, 질량비 : %f, 중력가속도 : %f", $itor(v1*SF), mu1, $itor(gravity * 10.0 ** -3.0));
+    #10 RESETB = 1;
+        START_INTEGRATION = 1;
 end
 
+always begin
+    elapsed <= elapsed + 1;
+    #1000000 $display("시간 : %f", elapsed);
+end
+/*
+always @(*) begin
+    $display("현재 속도 : %f", VELOCITY*SF*SF*SF);
+    $display("현재 높이 : %f", INTEGRAL_RESULT);
+end
+*/
 initial begin
     #168000000 $finish;
 end
@@ -57,7 +81,7 @@ always begin
 end
 
 initial begin
-    $dumpfile("trial.vcd");
+    $dumpfile("output.vcd");
     $dumpvars(0, tb);  
 end
 

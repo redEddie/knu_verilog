@@ -1,14 +1,14 @@
 // 클럭이 마이크로 단위이다..
 /*
-해야할 거. 정확도를 위해서 소수 9번째에서 계산하게 만든다.
+해야할 거. 정확도를 위해서 소수 9번째에서 계산하게 만든다. (출력속도는 소수9자리까지 무조건)
 높이를 반환하도록 한다.
 높이와 속도를 받아 각속도를 계산해낸다.
 */
 
 
-module trial (
-    output reg [127:0] velocity,
-    output reg [127:0] afterWeight,
+module getVelocity (
+    output reg [63:0] velocity,
+    output reg [63:0] afterWeight,
 
     input wire [63:0] specificImpulse,
     input wire [63:0] initialWeight,
@@ -36,7 +36,7 @@ end
 
 reg [63:0] mu;
 always @(*) begin
-    mu <= (initialWeight*ISF*ISF - usedPropellentForCalcul) / initialWeight; // 분모가 소수6자리를 더 표현하고 있다. 소수 6자리까지
+    mu <= (initialWeight*ISF*ISF - usedPropellent) / initialWeight; // 분모가 소수6자리를 더 표현하고 있다. 소수 6자리까지
 end
 
 
@@ -47,13 +47,13 @@ wire [63:0] uprime; // effective exhaust velocity
 assign uprime = GRAVITY * specificImpulse;
 
 always @(posedge clk or negedge resetb) begin
-    velocity <= uprime * lnmu; // 소수3자리 * 소수6자리
+    velocity <= uprime * lnmu; // 소수3자리 * 소수6자리, 계산은 9자리에서 하도록 하고 얘는 무조건 9자리로 출력되도록 해야 뒤에 탈이 없다.
 end
 
 initial begin
     usedPropellent = 0;
 end
-
+/*
 initial begin
     #10
     $display("시간 당 연소량 : %f", consumeRatio);
@@ -63,7 +63,8 @@ initial begin
     $display("최종속도 : %f", velocity);
     $display("최종속도 : %f", (velocity*SF*SF*SF));
 end
-
+*/
+/*
 always @(*) begin
     // $display("최종속도 : %f", velocity);
 
@@ -71,5 +72,5 @@ always @(*) begin
     $display("절댓값 ln 질량비 : %f", lnmu);
     $display("최종속도 : %f", (velocity*SF*SF*SF));
 end
-
-endmodule //trial
+*/
+endmodule //getVelocity
