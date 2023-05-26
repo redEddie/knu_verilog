@@ -26,8 +26,8 @@ gimbal30km gimbal_1(
     .clk(CLK),
     .resetb(RESETB),
     .velocity(VELOCITY),
-    .height(INTEGRAL_RESULT)
-    .angularVelocity(ANGULER_VELOCITY)
+    .height(INTEGRAL_RESULT),
+    .angularVelocity(DELIVER_ANGULER_VELOCITY)
 );
 
 // velocity 관련 메모리
@@ -42,9 +42,15 @@ reg [63:0] SPECIFICIMPULSE;
 reg [63:0] INITIALWEIGHT;
 reg [63:0] PROPELLENTWEIGHT;
 reg [63:0] BURNTIME;
-reg [63:0] ANGULER_VELOCITY;
 reg CLK;
 reg RESETB;
+
+wire [N-1:0] DELIVER_ANGULER_VELOCITY;
+/*
+reg [N-1:0] ANGULER_VELOCITY;
+always @(posedge clk or negedge resetb) begin
+    ANGULER_VELOCITY <= DELIVER_ANGULER_VELOCITY;
+end */
 
 // integration 관련 메모리
 reg START_INTEGRATION;

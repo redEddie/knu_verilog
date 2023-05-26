@@ -26,7 +26,27 @@ gimbal30km gimbal_1(
     .clk(CLK),
     .resetb(RESETB),
     .velocity(VELOCITY),
-    .height(INTEGRAL_RESULT)
+    .height(INTEGRAL_RESULT),
+    .angularVelocity(DELIVER_ANGULER_VELOCITY),
+    .noairAltitude(DELIVER_NOAIR_ALTITUDE),
+    .noairDistance(DELIVER_NOAIR_DISTANCE)
+);
+wire [N-1:0] DELIVER_NOAIR_ALTITUDE;
+reg [N-1:0] NOAIR_ALTITUDE;
+always @(posedge CLK or negedge RESETB) begin
+    NOAIR_ALTITUDE <= DELIVER_NOAIR_ALTITUDE;
+end
+wire [N-1:0] DELIVER_NOAIR_DISTANCE;
+reg [N-1:0] NOAIR_DISTANCE;
+always @(posedge CLK or negedge RESETB) begin
+    NOAIR_DISTANCE <= DELIVER_NOAIR_DISTANCE;
+end
+
+altitudeCalculator altitude_1(
+    .clk(CLK),
+    .resetb(RESETB),
+    .noairAltitude(NOAIR_ALTITUDE),
+    .noairDistance(NOAIR_DISTANCE),
     .angularVelocity(ANGULER_VELOCITY)
 );
 
@@ -42,9 +62,14 @@ reg [63:0] SPECIFICIMPULSE;
 reg [63:0] INITIALWEIGHT;
 reg [63:0] PROPELLENTWEIGHT;
 reg [63:0] BURNTIME;
-reg [63:0] ANGULER_VELOCITY;
 reg CLK;
 reg RESETB;
+
+wire [N-1:0] DELIVER_ANGULER_VELOCITY;
+reg [N-1:0] ANGULER_VELOCITY;
+always @(posedge CLK or negedge RESETB) begin
+    ANGULER_VELOCITY <= DELIVER_ANGULER_VELOCITY;
+end
 
 // integration 관련 메모리
 reg [N-1:0] SIGNAL_INPUT;

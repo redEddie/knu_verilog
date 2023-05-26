@@ -1,9 +1,7 @@
 /*
 https://en.wikipedia.org/wiki/Gimbaled_thrust
 
-이게 필요한 이유는 우주선이 계속해서 가속하기 때문에 
-    궤도를 만들기 위한 각속도를 일정하게 유지한다면 => L=r*theta 에서 r이 계속해서 줄어들어 곧 추락한다.
-    따라서 속도에 알맞는 각속도를 반환해주고, 이에 따라 엔진이 동작할 수 있어야 한다.
+이제 188km까지 갔으면 궤도를 유지하면서 속도만 늘려야 한다.
 */
 
 module gimbal30km #(
@@ -12,15 +10,14 @@ module gimbal30km #(
     parameter ISF = 10.0**3.0
 )(
     output reg [N-1:0] angularVelocity,
+    output reg [N-1:0] noairAltitude,
+    output reg [N-1:0] noairDistance,
 
     input clk,
     input resetb,
     input wire [N-1:0] velocity,
     input wire [N-1:0] height
 );
-// reg [N-1:0] angularVelocity;
-
-localparam targetAltitude = 188000; // 목표 높이 188km
 
 reg gimbalEnable;
 always @(posedge clk or negedge resetb) begin
@@ -43,6 +40,7 @@ always @(posedge clk or negedge resetb) begin
         /* height는 소수9자리까지. 
         l = r*θ 이용.
         결과물은 나눠도 소수점 9자리까지이다.
+        얘는 순간순간의 각도이다. 각속도.. 랑 동일하네 이게...
         */
 end
 
@@ -53,6 +51,9 @@ initial begin
     if (height*SF*SF*SF*SF > 30) begin
         $display("saturn V reached 30km height"); 
         $display(">>> gimbal start...");
+
+        noairAltitude = height; // 초기치는 30km 순간의 고도. 근데 소수 9자리를 곁들인.
+        noairDistance = 0; // 초기치는 0. 근데 얘도 소수 9자리를 만들어주자.
     end
 end
 

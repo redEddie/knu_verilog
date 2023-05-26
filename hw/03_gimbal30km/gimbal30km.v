@@ -43,6 +43,8 @@ always @(posedge clk or negedge resetb) begin
         /* height는 소수9자리까지. 
         l = r*θ 이용.
         결과물은 나눠도 소수점 9자리까지이다.
+        아 이거 각속도가 아니라 그냥 각도구나
+        각속도 구하고 싶으면, state, next_state 처럼 이전 state를 저장해두면 이케저케 어케든 할 수 있다.
         */
 end
 
@@ -56,4 +58,4 @@ initial begin
     end
 end
 
-endmodule //30kmGimbal
+endmodule //gimbal30km

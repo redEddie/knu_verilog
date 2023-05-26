@@ -27,11 +27,19 @@ fmt_string = "{:0" + fmt_width + "X}  // {:03}: sin({:.4f}) = {:.4f}"
     4 => 채울 빈칸은 4자리다
     X => 16진수다
 '''
-
+'''
 for i in range(rows):
     val = (pi/(2*rows)) * i
     res = sin(val)
     res_scaled = round((2**width) * res)
     if res_scaled == 2**width:  # maximum value uses too many bits
         res_scaled -= 1;        # accompanying Verilog module handles this
+    print(fmt_string.format(res_scaled, i, val, res))
+'''
+for i in range(rows):
+    val = (pi/(2*rows)) * i # pi/2를 256개로 나누고
+    res = sin(val)          # 나눈 애를 가지고 sin을 하면 0보다 작은 게 나오겠지.
+    res_scaled = round((2**width) * res) # result를 2^16승 해준다. 그럼 소수16자리까지 나오겠지.
+    if res_scaled == 2**width:
+        res_scaled -= 1;
     print(fmt_string.format(res_scaled, i, val, res))
