@@ -51,11 +51,6 @@ end
 initial begin
     gimbalEnable = 0;
     angularVelocity = 0;
-
-    if (height*SF*SF*SF*SF > 30) begin
-        $display("saturn V reached 30km height"); 
-        $display(">>> gimbal start...");
-    end
 end
 
 endmodule //gimbal30km

@@ -42,9 +42,10 @@ end
 
 reg [15:0] SINE_ROM [0:255];
 // 그냥 sine 소수4자리까지 0~1을 반환하므로 8비트이다.
-reg [11:0] ISINE_ROM [0:255];
-// sine inverse는 소수 4자리까지 90.0000을 가져오므 17비트는 필요하다. 
-// 고쳤다. 소수3자리까지다. 그래서 16비트면 된다.
+// 얘가 잘 이해가 안 된다.
+reg [15:0] ISINE_ROM [0:255];
+// sine inverse는 소수 4자리까지 pi/2를 가져옴.
+// 필요한건 더적은데 예쁜건 16이니까.
 
 initial begin
     $display("Loading rom.");

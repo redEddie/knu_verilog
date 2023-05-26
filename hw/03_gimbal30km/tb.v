@@ -45,12 +45,12 @@ reg [63:0] BURNTIME;
 reg CLK;
 reg RESETB;
 
+
 wire [N-1:0] DELIVER_ANGULER_VELOCITY;
-/*
 reg [N-1:0] ANGULER_VELOCITY;
-always @(posedge clk or negedge resetb) begin
+always @(posedge CLK or negedge RESETB) begin
     ANGULER_VELOCITY <= DELIVER_ANGULER_VELOCITY;
-end */
+end
 
 // integration 관련 메모리
 reg START_INTEGRATION;
