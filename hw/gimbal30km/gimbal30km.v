@@ -11,16 +11,16 @@ module gimbal30km #(
     parameter SF = 10.0**-3.0,
     parameter ISF = 10.0**3.0
 )(
-    // output reg [64:0] angularVelocity,
+    output reg [N-1:0] angularVelocity,
 
     input clk,
     input resetb,
     input wire [N-1:0] velocity,
     input wire [N-1:0] height
 );
-reg [N-1:0] angularVelocity;
+// reg [N-1:0] angularVelocity;
 
-localparam radian = 188000; // 목표 높이 188km
+localparam targetAltitude = 188000; // 목표 높이 188km
 
 reg gimbalEnable;
 always @(posedge clk or negedge resetb) begin
@@ -34,15 +34,22 @@ always @(posedge clk or negedge resetb) begin
         gimbalEnable <= 0;
 end
 
+// 클럭당 속도에 클럭을 곱해서 계산하면 거리가 되고 이를 가지고 각속도를 구해보자.
+parameter radianBig = 400000; // 400km라고 대충 잡자
+reg [N-1:0] altitude;
 always @(posedge clk or negedge resetb) begin
     if(gimbalEnable)
-        angularVelocity <= height*SF*SF / radian;
-        // 이미 height를 소수 9자리까지 받아왔는데 거기서 나누기를 한다라.. 그래도 결과는 소수 9자리다. 그럼 이걸 소수 3자리까지 반환해야하니.
+        angularVelocity <= height / radianBig;
+        /* height는 소수9자리까지. 
+        l = r*θ 이용.
+        결과물은 나눠도 소수점 9자리까지이다.
+        */
 end
 
 initial begin
     gimbalEnable = 0;
-    
+    angularVelocity = 0;
+
     if (height*SF*SF*SF*SF > 30) begin
         $display("saturn V reached 30km height"); 
         $display(">>> gimbal start...");

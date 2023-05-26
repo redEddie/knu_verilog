@@ -27,7 +27,7 @@ gimbal30km gimbal_1(
     .resetb(RESETB),
     .velocity(VELOCITY),
     .height(INTEGRAL_RESULT)
-    // .angularVelocity(ANGULER_VELOCITY),
+    .angularVelocity(ANGULER_VELOCITY)
 );
 
 // velocity 관련 메모리
