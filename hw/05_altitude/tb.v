@@ -2,7 +2,8 @@ module tb#(
     parameter PERIOD = 10,
     parameter N = 64
 );
-
+// 어제 3 고친거처럼 angular velocity 전달하느거 다시 만듦면 된다.
+// 시뮬레이션 시간단위 다르게 하면 고장난다.
 getVelocity getVelocity_1(
     .velocity(VELOCITY),
     .afterWeight(AFTERWEIGHT),
