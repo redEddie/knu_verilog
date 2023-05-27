@@ -12,14 +12,16 @@ module gimbal30km #(
     output reg [N-1:0] angularVelocity,
     output reg [N-1:0] noairAltitude,
     output reg [N-1:0] noairDistance,
+    output reg gimbalEnable,
 
     input clk,
     input resetb,
     input wire [N-1:0] velocity,
     input wire [N-1:0] height
 );
+localparam targetAltitude = 188000; // 목표 높이 188km
 
-reg gimbalEnable;
+
 always @(posedge clk or negedge resetb) begin
     // 30km이면~
     // 받아온 높이 단위가 소수9자리까지, 보고 싶은건 km 단위 따라서 11자리 부터
@@ -29,6 +31,12 @@ always @(posedge clk or negedge resetb) begin
         gimbalEnable <= 0;
     else
         gimbalEnable <= 0;
+end
+
+always @(gimbalEnable) begin
+    if(gimbalEnable)
+        noairAltitude <= height;  // 초기치는 30km 순간의 고도. 근데 소수 9자리를 곁들인.
+        noairDistance <= 0;       // 초기치는 0. 근데 얘도 소수 9자리를 만들어주자.
 end
 
 // 클럭당 속도에 클럭을 곱해서 계산하면 거리가 되고 이를 가지고 각속도를 구해보자.
@@ -47,14 +55,6 @@ end
 initial begin
     gimbalEnable = 0;
     angularVelocity = 0;
-
-    if (height*SF*SF*SF*SF > 30) begin
-        $display("saturn V reached 30km height"); 
-        $display(">>> gimbal start...");
-
-        noairAltitude = height; // 초기치는 30km 순간의 고도. 근데 소수 9자리를 곁들인.
-        noairDistance = 0; // 초기치는 0. 근데 얘도 소수 9자리를 만들어주자.
-    end
 end
 
 endmodule //30kmGimbal

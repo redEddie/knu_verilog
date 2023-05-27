@@ -1,1 +1,1 @@
-`timescale 1ms/1ms
+`timescale 1us/1us

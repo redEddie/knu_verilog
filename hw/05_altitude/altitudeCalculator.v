@@ -1,3 +1,8 @@
+/*
+지금 integration 신호가 0us에서부터 1임. 고치고,
+근데 이게 fraction 정보가 gimbal enable 이전까지 0이라서 신호는 정상저긍로 나온다.
+*/
+
 module altitudeCalculator #(
     parameter N = 64,
     parameter PERIOD = 10,
@@ -50,6 +55,9 @@ reg [15:0] ISINE_ROM [0:255];
 initial begin
     $display("Loading rom.");
     $readmemh("sine_table_256x16.mem", SINE_ROM);
+    if (SINE_ROM[0] != 0) begin
+       $display("Loaded sine table");
+    end
     $readmemh("isine_table_256x16.mem", ISINE_ROM);
 end
 
@@ -110,9 +118,17 @@ end
 reg altitude_enable;
 reg distance_enable;
 always @(posedge clk or negedge resetb) begin
-    if (noairAltitude > 0) begin
+    if (noairAltitude == 0) begin
+        altitude_enable <= 0;
+        distance_enable <= 0;
+    end
+    else 
         altitude_enable <= 1;
         distance_enable <= 1;
-    end
+end
+
+initial begin
+    altitude_enable = 0;
+    distance_enable = 0;
 end
 endmodule
