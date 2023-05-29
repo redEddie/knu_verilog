@@ -5,16 +5,14 @@ module tb#(
     parameter GRAVITY = 9_799,
     parameter SF = 10.0**-3.0,
     parameter ISF = 10.0**3.0,
-    // parameter SPECIFICIMPULSE_1 = 263,
-    parameter SPECIFICIMPULSE_1 = 363,
+    parameter SPECIFICIMPULSE_1 = 263,
     parameter SPECIFICIMPULSE_2 = 421,
     parameter SPECIFICIMPULSE_3 = 421,
     parameter WEIGHT_PROPELLANT_1 = 2077000,
     parameter WEIGHT_PROPELLANT_2 = 456100,
     parameter WEIGHT_PROPELLANT_3 = 39136, // 3단은 두번에 나눠 점화한다 => state 3, 4로 나눔.
     parameter WEIGHT_PROPELLANT_4 = 83864,
-    // parameter BURNTIME_1 = 168,
-    parameter BURNTIME_1 = 48,
+    parameter BURNTIME_1 = 168,
     parameter BURNTIME_2 = 360,
     parameter BURNTIME_3 = 165,
     parameter BURNTIME_4 = 335,
@@ -315,8 +313,8 @@ always @(posedge CLK or negedge RESETB) begin
         #1_000 $display("saturn V reached 30km height... @ %04ds", $time/SCALE); 
         PRINT30KM <= 1;
         $display(">>> gimbal start...");
-        $display(">>> current altitude : %f km", CURRENTALTITUDE*SF*SF*SF*SF);
-        $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF*SF);
+        $display(">>> current altitude : %f km", CURRENTALTITUDE*SF*SF*SF);
+        $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF);
         $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF);
     end
     else if ( (STAGESTATE == 1) || (STAGEMANAGER == 0)) begin
@@ -326,8 +324,8 @@ always @(posedge CLK or negedge RESETB) begin
     else if ((STAGESTATE == 1) && (STAGEMANAGER == 1)) begin
         #1_000 $display("1st stage about to detach... @ %04ds", $time/SCALE);
         $display(">>> detachment start...");
-        $display(">>> current altitude : %f km", CURRENTALTITUDE*SF*SF*SF*SF);
-        $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF*SF);
+        $display(">>> current altitude : %f km", CURRENTALTITUDE*SF*SF*SF);
+        $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF);
         $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF);
     end
     else begin
@@ -336,10 +334,11 @@ always @(posedge CLK or negedge RESETB) begin
 end
 
 initial begin
-    #10_000
-    #48_000
-    // #168_000000 // 1st
-    // #360_000000 // 2nd
+    // #10_000
+    // #48_000
+    #168_000 // 1st
+    #360_000 // 2nd
+    #100_000
     $finish;
 end
 

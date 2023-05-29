@@ -28,7 +28,7 @@ always @(posedge clk or negedge resetb) begin
     // 받아온 높이 단위가 소수9자리까지, 보고 싶은건 km 단위 따라서 11자리 부터
     if (~resetb)
         gimbalEnable <= 0;
-    else if ((height*SF*SF*SF > 30000) && (currentAltitude*SF*SF*SF < TARGETALTITUDE))
+    else if ((height*SF*SF*SF > 30) && (currentAltitude*SF*SF*SF < TARGETALTITUDE))
         gimbalEnable <= 1;
     else
         gimbalEnable <= 0;

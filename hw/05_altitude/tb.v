@@ -143,8 +143,8 @@ always @(posedge CLK or negedge RESETB) begin
         #1_000000 $display("saturn V reached 30km height @ %04d", elapsed); 
         print30km <= 1;
         $display(">>> gimbal start...");
-        $display(">>> current altitude : %f km", currentHeight*SF*SF*SF*SF);
-        $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF);
+        $display(">>> current altitude : %f km", currentHeight*SF*SF*SF);
+        $display(">>> current velocity : %f km/s", VELOCITY*SF*SF);
     end
     else begin
         elapsed <= elapsed +1;

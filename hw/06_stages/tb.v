@@ -314,8 +314,8 @@ always @(posedge CLK or negedge RESETB) begin
         #1_000000 $display("saturn V reached 30km height... @ %04ds", $time/1000000); 
         PRINT30KM <= 1;
         $display(">>> gimbal start...");
-        $display(">>> current altitude : %f km", CURRENTALTITUDE*SF*SF*SF*SF);
-        $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF*SF);
+        $display(">>> current altitude : %f km", CURRENTALTITUDE*SF*SF*SF);
+        $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF);
         $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF);
     end
     else if ( (STAGESTATE == 1) || (STAGEMANAGER == 0)) begin
@@ -325,8 +325,8 @@ always @(posedge CLK or negedge RESETB) begin
     else if ( (STAGESTATE == 1) && (IGNITION_END == 1)) begin
         #1_000000 $display("1st stage about to detach... @ %04ds", $time/1000000);
         $display(">>> detachment start...");
-        $display(">>> current altitude : %f km", CURRENTALTITUDE*SF*SF*SF*SF);
-        $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF*SF);
+        $display(">>> current altitude : %f km", CURRENTALTITUDE*SF*SF*SF);
+        $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF);
         $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF);
     end
     else begin

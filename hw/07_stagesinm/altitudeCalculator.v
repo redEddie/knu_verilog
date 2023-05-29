@@ -17,7 +17,7 @@ module altitudeCalculator #(
     parameter BIG_RADIAN = 400,
     parameter SF = 10.0**-3.0,
     parameter ISF = 10.0**3.0,
-    parameter ANGLE30 = 37.228841880,
+    parameter ANGLE30 = 37_228841880,
     parameter TARGETALTITUDE = 188000 // 목표 높이 188km
 
 )(
@@ -70,7 +70,7 @@ initial begin
     minusheight = 0;
     sine = 0;
     cosine = 0;
-    angle_accumulation = ANGLE30*ISF*ISF*ISF;
+    angle_accumulation = ANGLE30;
     altitude_enable = 0;
     distance_enable = 0;
     $display("Loading rom.");

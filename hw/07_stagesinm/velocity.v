@@ -27,7 +27,7 @@ module getVelocity #(
 );
 
 wire [63:0] consumeRatio;
-assign consumeRatio = propellantWeight/burntime; // 이 자체로는 그냥 비율(소수6째)
+assign consumeRatio = propellantWeight*ISF*ISF/burntime; // 이 자체로는 그냥 비율 소수 6자리
 
 reg [63:0] usedPropellant;
 reg [N-1:0] initialVelocity;
@@ -37,7 +37,9 @@ always @(posedge clk or negedge resetb) begin
         usedPropellant <= 0;
     end
     else if (~ignition_end) begin
-        usedPropellant <= usedPropellant + 2*PERIOD*consumeRatio; // 소수6째까지 계산하고 있다.
+        usedPropellant <= usedPropellant + 2*PERIOD*consumeRatio*SF; // 소수6째까지 계산하고 있다.
+        // 단위가 10m니까 소수 3자리를 곱하게 되었고, (그만큼 3자리 커진거)
+        // 따라서 소수9자리므로 3자리 빼줘야 소수 6자리가 된다.
     end
     else
         usedPropellant <= usedPropellant;
@@ -48,12 +50,12 @@ always @(posedge clk or negedge resetb) begin
         afterWeight <= 0;
     end
     else
-        afterWeight <= initialWeight - propellantWeight;
+        afterWeight <= initialWeight*ISF*ISF - propellantWeight;
 end
 
 reg [63:0] mu;
 always @(*) begin
-    mu <= (initialWeight*ISF*ISF - usedPropellant) / initialWeight; // 분모가 소수6자리를 더 표현하고 있다. 소수 6자리까지
+    mu <= (initialWeight*ISF*ISF - usedPropellant) / initialWeight; // 분자가 소수6자리를 더 표현하고 있다. 소수 6자리까지
 end
 
 
