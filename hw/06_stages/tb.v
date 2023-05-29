@@ -318,11 +318,10 @@ always @(posedge CLK or negedge RESETB) begin
         $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF);
         $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF);
     end
-    else if ( (STAGESTATE == 1) || (STAGEMANAGER == 0)) begin
+    else if ( (STAGESTATE == 4'd1) && (IGNITION_END == 0)) begin
         #1_000000 $display("시간1 : %04ds", $time/1000000);
     end
-    // else if ( (STAGESTATE == 1) || (STAGEMANAGER == 1)) begin
-    else if ( (STAGESTATE == 1) && (IGNITION_END == 1)) begin
+    else if ( (STAGESTATE == 4'd1) && (IGNITION_END == 1) ) begin
         #1_000000 $display("1st stage about to detach... @ %04ds", $time/1000000);
         $display(">>> detachment start...");
         $display(">>> current altitude : %f km", CURRENTALTITUDE*SF*SF*SF);

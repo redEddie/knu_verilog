@@ -267,12 +267,6 @@ initial begin
     START_INTEGRATION = 0;
 end
 
-initial begin
-        RESETB = 0;
-
-    #50 RESETB = 1;
-        START_INTEGRATION = 1;
-end
 
 
 reg [N-1:0] CURRENTALTITUDE;
@@ -302,34 +296,41 @@ end
 
 // 
 reg PRINT30KM;
+reg STAGE1SEPARATED;
+always @(posedge CLK or negedge RESETB) begin
+    STAGE1SEPARATED <= (STAGESTATE[0]) && (~STAGEMANAGER);
+end
+
 always @(posedge CLK or negedge RESETB) begin
     if (~RESETB) begin
         PRINT30KM <= 0;
     end
-    else if ((~GIMBALENABLE) && (STAGESTATE == 1)) begin
-        #1_000 $display("시간 : %04ds", $time/SCALE);
+    else if ((~GIMBALENABLE) && (STAGESTATE == 4'd1)) begin
+        #1_000 
+        $display("시간 : %04ds", $time/SCALE);
     end
-    else if ((~PRINT30KM) && (STAGESTATE == 1)) begin
-        #1_000 $display("saturn V reached 30km height... @ %04ds", $time/SCALE); 
+    else if ((~PRINT30KM) && (STAGESTATE == 4'd1)) begin
+        $display("saturn V reached 30km height... @ %04ds", $time/SCALE); 
         PRINT30KM <= 1;
         $display(">>> gimbal start...");
         $display(">>> current altitude : %f km", CURRENTALTITUDE*SF*SF*SF);
         $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF);
         $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF);
     end
-    else if ( (STAGESTATE == 1) || (STAGEMANAGER == 0)) begin
-        #1_000 $display("시간1 : %04ds", $time/SCALE);
+    else if ( (STAGESTATE == 4'd1) && (~STAGEMANAGER) ) begin
+        #1_000 
+        $display("1스테이지 분리 전 시간 : %04ds", $time/SCALE); // 얘는 잘 나오는데 
     end
-    // else if ( (STAGESTATE == 1) || (STAGEMANAGER == 1)) begin
-    else if ((STAGESTATE == 1) && (STAGEMANAGER == 1)) begin
-        #1_000 $display("1st stage about to detach... @ %04ds", $time/SCALE);
+    else if ((STAGESTATE == 4'd1) && (STAGEMANAGER)) begin
+        $display("1st stage about to detach... @ %04ds", $time/SCALE);
         $display(">>> detachment start...");
         $display(">>> current altitude : %f km", CURRENTALTITUDE*SF*SF*SF);
         $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF);
         $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF);
     end
     else begin
-        #1_000 $display("시간2 : %04ds", $time/SCALE);
+        #1_000 
+        $display("시간2 : %04ds", $time/SCALE);
     end
 end
 
@@ -340,6 +341,14 @@ initial begin
     #360_000 // 2nd
     #100_000
     $finish;
+end
+
+initial begin
+        RESETB = 0;
+        STAGE1SEPARATED = 0;
+
+    #50 RESETB = 1;
+        START_INTEGRATION = 1;
 end
 
 always begin
