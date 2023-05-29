@@ -7,7 +7,8 @@ https://en.wikipedia.org/wiki/Gimbaled_thrust
 module gimbal30km #(
     parameter N = 64,
     parameter SF = 10.0**-3.0,
-    parameter ISF = 10.0**3.0
+    parameter ISF = 10.0**3.0,
+    parameter TARGETALTITUDE = 188000 // 목표 높이 188km
 )(
     output reg [N-1:0] angularVelocity,
     output reg [N-1:0] noairAltitude,
@@ -17,23 +18,23 @@ module gimbal30km #(
     input clk,
     input resetb,
     input wire [N-1:0] velocity,
-    input wire [N-1:0] height
+    input wire [N-1:0] height,
+    input wire [N-1:0] currentAltitude
 );
-localparam targetAltitude = 188000; // 목표 높이 188km
 
 
 always @(posedge clk or negedge resetb) begin
     // 30km이면~
     // 받아온 높이 단위가 소수9자리까지, 보고 싶은건 km 단위 따라서 11자리 부터
-    if(height*SF*SF*SF*SF > 30)
-        gimbalEnable <= 1;
-    else if (~resetb)
+    if (~resetb)
         gimbalEnable <= 0;
+    else if ((height*SF*SF*SF > 30000) && (currentAltitude*SF*SF*SF < TARGETALTITUDE))
+        gimbalEnable <= 1;
     else
         gimbalEnable <= 0;
 end
 
-always @(gimbalEnable) begin
+always @(posedge gimbalEnable) begin
     if(gimbalEnable)
         noairAltitude <= height;  // 초기치는 30km 순간의 고도. 근데 소수 9자리를 곁들인.
         noairDistance <= 0;       // 초기치는 0. 근데 얘도 소수 9자리를 만들어주자.

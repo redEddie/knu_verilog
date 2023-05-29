@@ -29,7 +29,8 @@ module altitudeCalculator #(
     input wire [N-1:0] noairAltitude,
     input wire [N-1:0] noairDistance,
     input wire [N-1:0] angularVelocity,
-    input wire [N-1:0] height
+    input wire [N-1:0] height,
+    input wire [N-1:0] currentAltitude
 );
 
 numericalIntegral cal_alt(
@@ -41,7 +42,8 @@ numericalIntegral cal_alt(
 );
 wire [N-1:0] deliver_altitude;
 always @(posedge clk or negedge resetb) begin
-    altitude <= deliver_altitude;
+    if (altitude_enable)
+        altitude <= deliver_altitude;
 end
 
 numericalIntegral cal_dist(
@@ -53,7 +55,8 @@ numericalIntegral cal_dist(
 );
 wire [N-1:0] deliver_distance;
 always @(posedge clk or negedge resetb) begin
-    distance <= deliver_distance;
+    if (distance_enable)
+        distance <= deliver_distance;
 end
 
 reg [15:0] SINE_ROM [0:255];
@@ -159,16 +162,22 @@ always @(posedge clk or negedge resetb) begin
     if (noairAltitude == 0) begin
         altitude_enable <= 0;
     end
-    else 
+    else if (currentAltitude < TARGETALTITUDE*ISF*ISF*ISF ) begin
         altitude_enable <= 1;
+    end
+    else 
+        altitude_enable <= 0;
 end
 
 always @(posedge clk or negedge resetb) begin
-    if (noairAltitude == 0) begin
+    if ((noairAltitude == 0)) begin
         distance_enable <= 0;
     end
-    else 
+    else if (currentAltitude < TARGETALTITUDE*ISF*ISF*ISF ) begin
         distance_enable <= 1;
+    end
+    else
+        distance_enable <= 0;
 end
 
 endmodule

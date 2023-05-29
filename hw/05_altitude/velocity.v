@@ -10,7 +10,8 @@ module getVelocity #(
     parameter PERIOD = 10,
     parameter SF = 10.0**-3.0,
     parameter ISF = 10.0**3.0,
-    parameter GRAVITY = 9_799        // 미리 3승해서 소수를 피했다.
+    parameter GRAVITY = 9_799,        // 미리 3승해서 소수를 피했다.
+    parameter N = 64
 )(
     output reg [63:0] velocity,
     output reg [63:0] afterWeight,
@@ -53,25 +54,7 @@ end
 
 initial begin
     usedPropellent = 0;
+    $display("!!! ignition and liftoff !!!");
 end
-/*
-initial begin
-    #10
-    $display("시간 당 연소량 : %f", consumeRatio);
-    $display("연소 후 무게 : %f", afterWeight);
-    $display("질량비 : %f", mu);
-    $display("절댓값 ln 질량비 : %f", lnmu);
-    $display("최종속도 : %f", velocity);
-    $display("최종속도 : %f", (velocity*SF*SF*SF));
-end
-*/
-/*
-always @(*) begin
-    // $display("최종속도 : %f", velocity);
 
-    $display("질량비 : %f", mu);
-    $display("절댓값 ln 질량비 : %f", lnmu);
-    $display("최종속도 : %f", (velocity*SF*SF*SF));
-end
-*/
 endmodule //getVelocity

@@ -1,6 +1,9 @@
 module tb#(
     parameter PERIOD = 10,
-    parameter N = 64
+    parameter N = 64,
+    parameter GRAVITY = 9_799,
+    parameter SF = 10.0**-3.0,
+    parameter ISF = 10.0**3.0 // 얘를 곱하면 소수 3째자리 계산하겠단 의미가 된다.
 );
 // 어제 3 고친거처럼 angular velocity 전달하느거 다시 만듦면 된다.
 // 시뮬레이션 시간단위 다르게 하면 고장난다.
@@ -20,7 +23,7 @@ numericalIntegral height_calculator(
     .resetb(RESETB),
     .signal_input(VELOCITY),
     .start_integration(START_INTEGRATION),
-    .integral_result(INTEGRAL_RESULT)
+    .integral_result(HEIGHT)
 );
 wire [N-1:0] DELIVER_VELOCITY;
 reg [N-1:0] VELOCITY;
@@ -32,7 +35,7 @@ gimbal30km gimbal_1(
     .clk(CLK),
     .resetb(RESETB),
     .velocity(VELOCITY),
-    .height(INTEGRAL_RESULT),
+    .height(HEIGHT),
     .angularVelocity(DELIVER_ANGULER_VELOCITY),
     .noairAltitude(DELIVER_NOAIR_ALTITUDE),
     .noairDistance(DELIVER_NOAIR_DISTANCE),
@@ -48,24 +51,25 @@ reg [N-1:0] NOAIR_DISTANCE;
 always @(posedge CLK or negedge RESETB) begin
     NOAIR_DISTANCE <= DELIVER_NOAIR_DISTANCE;
 end
+
 initial begin
     NOAIR_ALTITUDE = 0;
     NOAIR_DISTANCE = 0;
 end
 
 altitudeCalculator altitude_1(
+    .altitude(ADDITIONALALTITUDE),
+    .distance(DISTANCE),
+    
     .clk(CLK),
     .resetb(RESETB),
     .noairAltitude(NOAIR_ALTITUDE),
     .noairDistance(NOAIR_DISTANCE),
-    .angularVelocity(ANGULER_VELOCITY)
+    .angularVelocity(ANGULER_VELOCITY),
+    .height(HEIGHT)
 );
 
 // velocity 관련 메모리
-localparam GRAVITY = 9_799;
-localparam SF = 10.0**-3.0;
-localparam ISF = 10.0**3.0; // 얘를 곱하면 소수 3째자리 계산하겠단 의미가 된다.
-
 wire [63:0] AFTERWEIGHT;
 
 wire GIMBALENABLE;
@@ -86,9 +90,13 @@ end
 reg [N-1:0] SIGNAL_INPUT;
 reg START_INTEGRATION;
 
-wire [N-1:0] INTEGRAL_RESULT;
+wire [N-1:0] HEIGHT;
 
 reg [63:0] elapsed;
+
+// altitude calculator
+wire [N-1 : 0] ADDITIONALALTITUDE;
+wire [N-1 : 0] DISTANCE;
 
 initial begin
     SPECIFICIMPULSE = 263;
@@ -114,9 +122,17 @@ reg print30km;
 initial begin
     print30km = 0;
 end
-/*always begin
-    if (GIMBALENABLE)
-end*/
+
+reg [N-1:0] currentHeight;
+always @(posedge CLK or negedge RESETB) begin
+    if (~GIMBALENABLE) begin
+        currentHeight <= HEIGHT;
+    end
+    else if(GIMBALENABLE) begin
+        currentHeight <= NOAIR_ALTITUDE + ADDITIONALALTITUDE;
+    end
+end
+
 always @(posedge CLK or negedge RESETB) begin
     if (~GIMBALENABLE) begin
         elapsed <= elapsed + 1;
@@ -127,7 +143,7 @@ always @(posedge CLK or negedge RESETB) begin
         #1_000000 $display("saturn V reached 30km height @ %04d", elapsed); 
         print30km <= 1;
         $display(">>> gimbal start...");
-        $display(">>> current altitude : %f km", INTEGRAL_RESULT*SF*SF*SF*SF);
+        $display(">>> current altitude : %f km", currentHeight*SF*SF*SF*SF);
         $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF);
     end
     else begin
@@ -137,8 +153,8 @@ always @(posedge CLK or negedge RESETB) begin
 end
 
 initial begin
-    // #10_000000 $finish;
-    #68_000000 $finish;
+    #10_000000 $finish;
+    // #68_000000 $finish;
     // #168_000000 $finish;
 end
 
