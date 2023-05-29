@@ -1,6 +1,9 @@
 /*
 지금 integration 신호가 0us에서부터 1임. 고치고,
-근데 이게 fraction 정보가 gimbal enable 이전까지 0이라서 신호는 정상저긍로 나온다.
+근데 이게 fraction 정보가 gimbal enable 이전까지 0이라서 신호는 정상적으로 나온다.
+
+이거 고치고나면
+각속도 계산을 제대로 하자. 33도 정도 미리 더해야함.
 */
 
 module altitudeCalculator #(
