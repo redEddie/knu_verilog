@@ -64,7 +64,7 @@ always @(posedge clk or negedge resetb) begin
         sine <= 0;
     end
     else if (noairAltitude> 0) begin
-        sine <= SINE_ROM[indexforsine]*ISF*ISF;
+        sine <= SINE_ROM[indexforsine]*ISF*ISF/SINE_ROM[255];
     end
 end
 
@@ -73,7 +73,7 @@ always @(posedge clk or negedge resetb) begin
         cosine <= 0;
     end
     else if (noairAltitude>0) begin
-        cosine <= SINE_ROM[indexforcosine]*ISF*ISF;
+        cosine <= SINE_ROM[indexforcosine]*ISF*ISF/SINE_ROM[255]; // SINE_ROM[255] 로 나눠줘도 되고 안 나눠줘도 되고.
     end
 end
 
