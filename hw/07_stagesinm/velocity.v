@@ -38,7 +38,7 @@ always @(posedge clk or negedge resetb) begin
     end
     else if (~ignition_end) begin
         usedPropellant <= usedPropellant + 2*PERIOD*consumeRatio*SF; // 소수6째까지 계산하고 있다.
-        // 단위가 10m니까 소수 3자리를 곱하게 되었고, (그만큼 3자리 커진거)
+        // 단위가 10m니까 소수 3자리를 곱하게 되었고, (그만큼 3자리 더 보는거)
         // 따라서 소수9자리므로 3자리 빼줘야 소수 6자리가 된다.
     end
     else
@@ -60,7 +60,7 @@ end
 
 
 wire [63:0] lnmu;
-assign lnmu = (-1)*($ln(mu) - $ln(ISF*ISF))*ISF*ISF; // 소수 6자리까지 표현된 mu의 ln 절댓값이다.
+assign lnmu = ($ln(ISF*ISF) - $ln(mu))*ISF*ISF; // 소수 6자리까지 표현된 mu의 ln 절댓값이다.
 
 wire [63:0] uprime; // effective exhaust velocity
 assign uprime = GRAVITY * specificImpulse;
@@ -73,12 +73,12 @@ always @(posedge clk or negedge resetb) begin
         ignition_end <= 0;
     end
     else if ((usedPropellant*SF*SF < propellantWeight) && (~backward)) begin
-        velocity <= initialVelocity + uprime * lnmu; // 소수3자리 * 소수6자리, 계산은 9자리에서 하도록 하고 얘는 무조건 9자리로 출력되도록 해야 뒤에 탈이 없다.
+        velocity <= initialVelocity + uprime * lnmu; // 소수3자리 * 소수6자리. 속도는 km/s임.
     end
     else if ((usedPropellant*SF*SF < propellantWeight) && (backward)) begin
         velocity <= initialVelocity - uprime * lnmu;
     end
-    else if ((usedPropellant*SF*SF >= propellantWeight)) begin // 소수점을 자르기보다 정수를 키우는게 더 정확하다.
+    else if ((usedPropellant*SF*SF >= propellantWeight)) begin
         initialVelocity <= velocity;
         ignition_end <= 1;
     end

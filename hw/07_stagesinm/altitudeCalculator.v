@@ -129,13 +129,13 @@ end
 reg [15:0] sine;
 always @(posedge clk or negedge resetb) begin
     if (altitude_enable) begin
-        sine <= SINE_ROM[index];
+        sine <= SINE_ROM[index]*ISF/SINE_ROM[255];
     end
 end
 
 reg [N-1:0] fractionAltitude;
 always @(posedge clk or negedge resetb) begin
-    fractionAltitude <= (height - minusheight)*sine *10.0**-4.0;
+    fractionAltitude <= (height - minusheight)*sine*SF;
     // sine : 소수 4째자리, height : 소수 9째자리 => 곱했을 때 13자리. 근데 9자리 원하니까 뒷 4자리 날려야함.
     // 모자란 소수가 총 8자리니까 SF SF 하고 2승 더 해주면 되겠다.
     // 최종적으로 소수9자리까지 표시하는 고도가 완성되었다.

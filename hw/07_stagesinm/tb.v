@@ -296,18 +296,20 @@ end
 
 // 
 reg PRINT30KM;
-reg STAGE1SEPARATED;
-always @(posedge CLK or negedge RESETB) begin
-    STAGE1SEPARATED <= (STAGESTATE[0]) && (~STAGEMANAGER);
-end
+reg STAGESEPARATE_1;
+reg STAGESEPARATE_2;
+reg STAGESEPARATE_3;
 
 always @(posedge CLK or negedge RESETB) begin
     if (~RESETB) begin
         PRINT30KM <= 0;
+        STAGESEPARATE_1 <= 0;
+        STAGESEPARATE_2 <= 0;
+        STAGESEPARATE_3 <= 0;
     end
     else if ((~GIMBALENABLE) && (STAGESTATE == 4'd1)) begin
-        #1_000 
         $display("시간 : %04ds", $time/SCALE);
+        #1_000; 
     end
     else if ((~PRINT30KM) && (STAGESTATE == 4'd1)) begin
         $display("saturn V reached 30km height... @ %04ds", $time/SCALE); 
@@ -316,22 +318,35 @@ always @(posedge CLK or negedge RESETB) begin
         $display(">>> current altitude : %f km", CURRENTALTITUDE*SF*SF*SF);
         $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF);
         $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF);
+        #1_000;
     end
-    else if ( (STAGESTATE == 4'd1) && (~STAGEMANAGER) ) begin
-        #1_000 
-        $display("1스테이지 분리 전 시간 : %04ds", $time/SCALE); // 얘는 잘 나오는데 
-    end
-    else if ((STAGESTATE == 4'd1) && (STAGEMANAGER)) begin
+
+    // 와... 이거 초랑 같이 나타내는거 어렵네
+    else if ( (~STAGESEPARATE_1) && (STAGESTATE == 4'd1) ) begin
         $display("1st stage about to detach... @ %04ds", $time/SCALE);
         $display(">>> detachment start...");
         $display(">>> current altitude : %f km", CURRENTALTITUDE*SF*SF*SF);
         $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF);
         $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF);
+        STAGESEPARATE_1 <= 1;
     end
-    else begin
-        #1_000 
-        $display("시간2 : %04ds", $time/SCALE);
+    else if ( (~STAGESEPARATE_2) && (STAGESTATE == 4'd2) ) begin
+        $display("2nd stage about to detach... @ %04ds", $time/SCALE);
+        $display(">>> detachment start...");
+        $display(">>> current altitude : %f km", CURRENTALTITUDE*SF*SF*SF);
+        $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF);
+        $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF);
+        STAGESEPARATE_2 <= 1;
     end
+    else if ( (~STAGESEPARATE_3) && (STAGESTATE == 4'd3) ) begin
+        $display("3nd stage about to detach... @ %04ds", $time/SCALE);
+        $display(">>> detachment start...");
+        $display(">>> current altitude : %f km", CURRENTALTITUDE*SF*SF*SF);
+        $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF);
+        $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF);
+        STAGESEPARATE_3 <= 1;
+    end
+
 end
 
 initial begin
@@ -339,13 +354,13 @@ initial begin
     // #48_000
     #168_000 // 1st
     #360_000 // 2nd
-    #100_000
+    #165_000 // 3rd
+    // #100_000
     $finish;
 end
 
 initial begin
         RESETB = 0;
-        STAGE1SEPARATED = 0;
 
     #50 RESETB = 1;
         START_INTEGRATION = 1;
