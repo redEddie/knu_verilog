@@ -73,7 +73,7 @@ always @(posedge clk or negedge resetb) begin
         ignition_end <= 0;
     end
     else if ((usedPropellant*SF*SF < propellantWeight) && (~backward)) begin
-        velocity <= initialVelocity + uprime * lnmu; // 소수3자리 * 소수6자리. 속도는 km/s임.
+        velocity <= initialVelocity + uprime * lnmu; // 소수3자리 * 소수6자리. 속도는 m/s임.
     end
     else if ((usedPropellant*SF*SF < propellantWeight) && (backward)) begin
         velocity <= initialVelocity - uprime * lnmu;
