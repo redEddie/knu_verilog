@@ -23,20 +23,7 @@ module tb#(
     parameter LM = 15103,
     parameter CMSM = 11900 // command module and service module
 );
-// 어제 3 고친거처럼 angular velocity 전달하느거 다시 만듦면 된다.
-// 시뮬레이션 시간단위 다르게 하면 고장난다.
-getVelocity getVelocity_1(
-    .velocity(DELIVER_VELOCITY), // m/s로 소수 9자리
-    .afterWeight(AFTERWEIGHT),
-    .specificImpulse(SPECIFICIMPULSE),   // 바뀌는 것
-    .initialWeight(INITIALWEIGHT),  // 바뀌는 것
-    .propellantWeight(WEIGHT_PROPELLANT), // 바뀌는 것
-    .burntime(BURNTIME),    // 바뀌는 것
-    .clk(CLK),
-    .resetb(~STAGEMANAGER),
-    .backward(BACKWARD),
-    .ignition_end(DELIVER_IGNITION_END)
-);
+
 wire [63:0] AFTERWEIGHT;
 wire DELIVER_IGNITION_END;
 reg IGNITION_END;
@@ -78,7 +65,9 @@ end
 always @(negedge STAGEMANAGER) begin
     if (~RESETB) begin
         STAGESTATE <= 0;
+        $display("");
         $display("!!! ignition and liftoff !!!");
+        $display("");
     end
     else begin
         STAGESTATE <= STAGESTATE+1;
@@ -169,72 +158,50 @@ always @(posedge CLK or negedge RESETB) begin
         WEIGHT_PROPELLANT <= WEIGHT_PROPELLANT;
 end
 
+getVelocity getVelocity_1(
+    .specificImpulse(SPECIFICIMPULSE),   // 바뀌는 것
+    .initialWeight(INITIALWEIGHT),  // 바뀌는 것
+    .propellantWeight(WEIGHT_PROPELLANT), // 바뀌는 것
+    .burntime(BURNTIME),    // 바뀌는 것
+    .clk(CLK),
+    .resetb(~STAGEMANAGER),
+    .backward(BACKWARD),
+
+    .afterWeight(AFTERWEIGHT),
+    .velocity(VELOCITY), // m/s로 소수 9자리
+    .ignition_end(DELIVER_IGNITION_END)
+);
+wire [N-1:0] VELOCITY;
+
 numericalIntegral height_calculator(
     .clk(CLK),
     .resetb(RESETB),
     .signal_input(VELOCITY),
     .start_integration(START_INTEGRATION),
 
-    .integral_result(HEIGHT),                   // m단위로 소수 9자리
-    .fraction_result(FRACTION_HEIGHT)
+    .integral_result(HEIGHT)              // m단위로 소수 9자리
 );
 reg START_INTEGRATION;
 
 wire [N-1:0] HEIGHT;
-wire [N-1:0] FRACTION_HEIGHT;
-wire [N-1:0] DELIVER_VELOCITY;
-reg [N-1:0] VELOCITY;
-always @(posedge CLK or negedge RESETB) begin
-    if (~RESETB) begin
-        VELOCITY <= 0;
-    end
-    else begin
-        VELOCITY <= DELIVER_VELOCITY;
-    end
-end
 
 gimbal30km gimbal_1(
     .clk(CLK),
     .resetb(RESETB),
     .velocity(VELOCITY),
     .height(HEIGHT),
-    .fraction_height(FRACTION_HEIGHT),
     .current_Altitude(CURRENT_ALTITUDE),
 
-    .angularVelocity(DELIVER_ANGULER_VELOCITY),
-    .noairAltitude(DELIVER_NOAIR_ALTITUDE),
-    .noairDistance(DELIVER_NOAIR_DISTANCE),
+    .angularVelocity(ANGULER_VELOCITY),
+    .noairAltitude(NOAIR_ALTITUDE),
+    .noairDistance(NOAIR_DISTANCE),
     .gimbalEnable(GIMBALENABLE)
 );
 wire GIMBALENABLE;
-wire [N-1:0] DELIVER_NOAIR_ALTITUDE;
-wire [N-1:0] DELIVER_NOAIR_DISTANCE;
-reg [N-1:0] NOAIR_ALTITUDE;
-always @(posedge CLK or negedge RESETB) begin
-    if (~RESETB) begin
-        NOAIR_ALTITUDE <= 0;
-    end
-    else begin
-        NOAIR_ALTITUDE <= DELIVER_NOAIR_ALTITUDE;
-    end
-end
-reg [N-1:0] NOAIR_DISTANCE;
-always @(posedge CLK or negedge RESETB) begin
-    if (~RESETB) begin
-        NOAIR_ALTITUDE <= 0;
-    end
-    else begin
-        NOAIR_DISTANCE <= DELIVER_NOAIR_DISTANCE;
-    end
-end
-wire [N-1:0] DELIVER_ANGULER_VELOCITY;
-reg [N-1:0] ANGULER_VELOCITY;
-always @(posedge CLK or negedge RESETB) begin
-    if (~RESETB)
-        ANGULER_VELOCITY <= 0;
-    else
-        ANGULER_VELOCITY <= DELIVER_ANGULER_VELOCITY;
-end
+wire [N-1:0] NOAIR_ALTITUDE;
+wire [N-1:0] NOAIR_DISTANCE;
+wire [N-1:0] ANGULER_VELOCITY;
+
 
 altitudeCalculator altitude_1(
     .fraction_Altitude(FRACTION_ALTITUDE),
@@ -245,39 +212,33 @@ altitudeCalculator altitude_1(
     .noairAltitude(NOAIR_ALTITUDE),
     .noairDistance(NOAIR_DISTANCE),
 
+    .velocity(VELOCITY),
     .angularVelocity(ANGULER_VELOCITY),
     .height(HEIGHT),
-    .fraction_height(FRACTION_HEIGHT),
     .current_Altitude(CURRENT_ALTITUDE)
 );
 wire [N-1:0] FRACTION_ALTITUDE;
 wire [N-1:0] FRACTION_DISTANCE;
-reg [N-1:0] DELIVER_FRACTION_ALTITUDE;
-reg [N-1:0] DELIVER_FRACTION_DISTACNCE;
-always @(posedge CLK or negedge RESETB) begin
-    DELIVER_FRACTION_ALTITUDE <= FRACTION_ALTITUDE;
-    DELIVER_FRACTION_DISTACNCE <= FRACTION_DISTANCE;
-end
-// 각도 계산기 소수 6자리인데, 적분기계에는 소수 9자리넣어야함.시발 이걸 몰랐다니
 numericalIntegral cal_alt(
     .clk(CLK),
     .resetb(RESETB),
-    .signal_input(DELIVER_FRACTION_ALTITUDE), // 64비트 크기로 줘야한다. 
-    .start_integration(1'b1),
+    .signal_input(FRACTION_ALTITUDE), // 64비트 크기로 줘야한다. 
+    .start_integration(~PRINT188KM),
 
     .integral_result(ALTITUDE_GIMBAL) // 얘도 64비트로 받아야 한다.
 );
-wire [N-1:0] ALTITUDE_GIMBAL;
 
 numericalIntegral cal_dist(
     .clk(CLK),
     .resetb(RESETB),
-    .signal_input(DELIVER_FRACTION_DISTACNCE), // 64비트 크기로 줘야한다. 
-    .start_integration(1'b1),
+    .signal_input(FRACTION_DISTANCE), // 64비트 크기로 줘야한다. 
+    .start_integration(~PRINT188KM),
 
     .integral_result(DISTNACE_GIMBAL) // 얘도 64비트로 받아야 한다.
 );
+wire [N-1:0] ALTITUDE_GIMBAL;
 wire [N-1:0] DISTNACE_GIMBAL;
+
 
 reg [N-1:0] CURRENT_ALTITUDE;
 always @(posedge CLK or negedge RESETB) begin
@@ -290,8 +251,8 @@ always @(posedge CLK or negedge RESETB) begin
     else if((NOAIR_ALTITUDE > 0)&&(~PRINT188KM)) begin
         CURRENT_ALTITUDE <= NOAIR_ALTITUDE + ALTITUDE_GIMBAL;
     end
-    else if(PRINT188KM)
-        CURRENT_ALTITUDE <= NOAIR_ALTITUDE + ALTITUDE_GIMBAL;
+        // noair altitude 는 소수 9자리다
+        // altitude gimbal 도 소수 9자린데 뭐가 문제지
 end
 
 reg [N-1:0] CURRENTDISTANCE;
@@ -303,10 +264,10 @@ always @(posedge CLK or negedge RESETB) begin
     if (~RESETB) begin
         CURRENTDISTANCE <= 0;
     end
-    else if (NOAIR_ALTITUDE > 0) begin
+    else if ((NOAIR_ALTITUDE > 0)&&(~PRINT188KM)) begin
         CURRENTDISTANCE <= DISTNACE_GIMBAL;
     end
-    else if (HEIGHT188 > 0) 
+    else if (PRINT188KM) 
         CURRENTDISTANCE <= DISTNACE_GIMBAL + HEIGHT - HEIGHT188;
 end
 
@@ -335,14 +296,15 @@ always @(posedge CLK or negedge RESETB) begin
         $display(">>> current altitude : %f km", CURRENT_ALTITUDE*SF*SF*SF*SF);
         $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF*SF);
         $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF*SF);
+        $display("");
         PRINT188KM <= 1;
         #1_000;
     end
-        
+    /*
     else if ((~GIMBALENABLE) && (STAGESTATE == 4'd1)) begin
         $display("시간 : %04ds", $time/SCALE);
         #1_000; 
-    end
+    end */
     else if ((~PRINT30KM) && (STAGESTATE == 4'd1)) begin
         $display("saturn V reached 30km height... @ %04ds", $time/SCALE); 
         PRINT30KM <= 1;
@@ -350,6 +312,7 @@ always @(posedge CLK or negedge RESETB) begin
         $display(">>> current altitude : %f km", CURRENT_ALTITUDE*SF*SF*SF*SF);
         $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF*SF);
         $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF*SF);
+        $display("");
         #1_000;
     end
 
@@ -361,6 +324,8 @@ always @(posedge CLK or negedge RESETB) begin
         $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF*SF);
         $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF*SF);
         STAGESEPARATE_1 <= 1;
+        $display("");
+
     end
     else if ( (~STAGESEPARATE_2) && (STAGESTATE == 4'd2) && (IGNITION_END) ) begin
         $display("2nd stage about to detach... @ %04ds", $time/SCALE);
@@ -369,6 +334,8 @@ always @(posedge CLK or negedge RESETB) begin
         $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF*SF);
         $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF*SF);
         STAGESEPARATE_2 <= 1;
+        $display("");
+
     end
     else if ( (~STAGESEPARATE_3) && (STAGESTATE == 4'd3) && (IGNITION_END) ) begin
         $display("reached at LEO... @ %04ds", $time/SCALE);
@@ -376,6 +343,8 @@ always @(posedge CLK or negedge RESETB) begin
         $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF*SF);
         $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF*SF);
         STAGESEPARATE_3 <= 1;
+        $display("");
+
     end
     else if ( (~STAGESEPARATE_4) && (STAGESTATE == 4'd4) && (IGNITION_END) ) begin
         $display("3rd stage about to detach... @ %04ds", $time/SCALE);
@@ -383,8 +352,11 @@ always @(posedge CLK or negedge RESETB) begin
         $display(">>> current altitude : %f km", CURRENT_ALTITUDE*SF*SF*SF*SF);
         $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF*SF);
         $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF*SF);
+        $display("");
         $display("trajectory length : %f km", HEIGHT*SF*SF*SF*SF);
         STAGESEPARATE_4 <= 1;
+        $display("");
+
     end
 end
 

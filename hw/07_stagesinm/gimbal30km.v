@@ -20,7 +20,6 @@ module gimbal30km #(
     input resetb,
     input wire [N-1:0] velocity,
     input wire [N-1:0] height,
-    input wire [N-1:0] fraction_height,
     input wire [N-1:0] current_Altitude
 );
 
@@ -48,7 +47,7 @@ always @(posedge clk or negedge resetb) begin
     if (~resetb)
         angularVelocity <= 0;
     else if(gimbalEnable)
-        angularVelocity <= fraction_height / radianBig;
+        angularVelocity <= velocity / radianBig;
         /* height는 소수9자리까지. 
         l = r*θ 이용.
         결과물은 나눠도 소수점 9자리까지이다.

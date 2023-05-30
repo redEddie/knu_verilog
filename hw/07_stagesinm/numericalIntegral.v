@@ -8,7 +8,6 @@ module numericalIntegral #(
     input wire [N-1:0] signal_input,        // sampled signal this clock
     input wire start_integration,            // Start integration signal
     
-    output reg [N-1:0] fraction_result,
     output reg [N-1:0] integral_result      // Result of the integral
 );
 
@@ -27,23 +26,9 @@ always @(posedge clk or negedge resetb) begin
         integral_result <= 0;
     end
     else if (start_integration) begin
-        // 입력신호가 소수 9자리고, 클럭이 ms니까 소수 12자리라서 보상해줘야 한다.
         integral_result <= integral_result + (PERIOD)*(signal+next_signal)*SF;
+        // 입력신호가 소수 9자리고, 클럭이 ms니까 소수 12자리라서 보상해줘야 한다.
     end
 end
 
-reg [N-1:0] integral_result_previous;
-always @(posedge clk or negedge resetb) begin
-    integral_result_previous <= integral_result;
-end
-
-always @(posedge clk or negedge resetb) begin
-    if (~resetb)
-        fraction_result <= 0;
-    else if (start_integration) 
-        fraction_result <= integral_result - integral_result_previous;
-end
-
-initial
-    integral_result = 0;
 endmodule

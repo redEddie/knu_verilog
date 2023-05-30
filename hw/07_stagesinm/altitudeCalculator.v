@@ -15,10 +15,12 @@ module altitudeCalculator #(
     input wire [N-1:0] noairAltitude,
     input wire [N-1:0] noairDistance,
 
+    input wire [N-1:0] velocity,
     input wire [N-1:0] angularVelocity,
     input wire [N-1:0] height,
-    input wire [N-1:0] fraction_height,
-    input wire [N-1:0] current_Altitude
+    input wire [N-1:0] current_Altitude 
+    // 여기서 current altitude를 받아오는게 fraction height보자 작다.
+    // 뭔가 소수점이 틀렸을 것 같다. fraction height까지는 소수점 9자리까지 이다. 
 );
 reg enable;
 always @(posedge clk or negedge resetb) begin
@@ -46,12 +48,14 @@ always @(posedge clk or negedge resetb) begin
 end
 
 wire [N-1:0] angle;
-wire [7:0] index;
+wire [7:0] indexforsine;
+wire [7:0] indexforcosine;
 reg [N-1:0] sine;
 reg [N-1:0] cosine;
 
 assign angle = (180_000000000 - angularVelocity)/2 - angle_accumulation; // 소수9자리까지
-assign index = (angle*SF*SF/90_000)*256;
+assign indexforsine = (angle*SF*SF/90_000)*256;
+assign indexforcosine = ((180_000000000 - angle)*SF*SF/90_000)*256;
 // 우선 두개 소수 3자리로 맞추고 계산하면 비율로 소수가 없는데
 // 다시 소수 3자리까지 나타내자.
 
@@ -60,7 +64,7 @@ always @(posedge clk or negedge resetb) begin
         sine <= 0;
     end
     else if (noairAltitude> 0) begin
-        sine <= SINE_ROM[index]*ISF*ISF/SINE_ROM[255]; // 사인값을 소수6자리까지 밯놘
+        sine <= SINE_ROM[indexforsine]*ISF*ISF;
     end
 end
 
@@ -69,16 +73,15 @@ always @(posedge clk or negedge resetb) begin
         cosine <= 0;
     end
     else if (noairAltitude>0) begin
-        cosine <= SINE_ROM[255-index]*ISF*ISF/SINE_ROM[255];
+        cosine <= SINE_ROM[indexforcosine]*ISF*ISF;
     end
 end
 
 always @(posedge clk or negedge resetb) begin
-    fraction_Altitude <= fraction_height*SF*SF*sine;
-    // height 소수 9자리. 사인 소수 6자리.
+    fraction_Altitude <= velocity*sine*SF*SF;
 end
 always @(posedge clk or negedge resetb) begin
-    fraction_Distance <= fraction_height*SF*SF*cosine;
+    fraction_Distance <= velocity*cosine*SF*SF;
 end
 
 
