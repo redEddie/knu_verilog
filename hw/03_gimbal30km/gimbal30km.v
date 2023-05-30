@@ -26,11 +26,11 @@ reg gimbalEnable;
 always @(posedge clk or negedge resetb) begin
     // 30km이면~
     // 받아온 높이 단위가 소수9자리까지, 보고 싶은건 km 단위 따라서 11자리 부터
-    if(height*SF*SF*SF*SF > 30)
-        gimbalEnable <= 1;
-    else if (~resetb)
+    if (~resetb)
         gimbalEnable <= 0;
-    else
+    else if(height*SF*SF*SF*SF > 30)
+        gimbalEnable <= 1;
+    else if(hegith*SF*SF*SF*SF < 188)
         gimbalEnable <= 0;
 end
 
@@ -43,8 +43,8 @@ always @(posedge clk or negedge resetb) begin
         /* height는 소수9자리까지. 
         l = r*θ 이용.
         결과물은 나눠도 소수점 9자리까지이다.
-        아 이거 각속도가 아니라 그냥 각도구나
-        각속도 구하고 싶으면, state, next_state 처럼 이전 state를 저장해두면 이케저케 어케든 할 수 있다.
+        여기서는 그냥 각돈데, height를 저장해서
+        이전값과 지금값 오차를 이용해 각도 계산하면 각속도
         */
 end
 

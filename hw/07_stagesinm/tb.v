@@ -383,6 +383,7 @@ always @(posedge CLK or negedge RESETB) begin
         $display(">>> current altitude : %f km", CURRENT_ALTITUDE*SF*SF*SF*SF);
         $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF*SF);
         $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF*SF);
+        $display("trajectory length : %f km", HEIGHT*SF*SF*SF*SF);
         STAGESEPARATE_4 <= 1;
     end
 end

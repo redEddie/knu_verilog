@@ -11,5 +11,6 @@ for height in count():
         break
     
     pressure = pressureof(height)
-    print('ratio is ' + str(pressure) + ' for altitude ' + str(height) + 'm or ' + str(0.001*height) + 'km')
+    print('ratio is ' + str(pressure) + ' for altitude ' 
+          + str(height) + 'm or ' + str(0.001*height) + 'km')
 

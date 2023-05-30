@@ -17,27 +17,27 @@ module getVelocity #(
 
     input wire [63:0] specificImpulse,
     input wire [63:0] initialWeight,
-    input wire [63:0] propellentWeight,
+    input wire [63:0] propellantWeight,
     input wire [63:0] burntime,
     input wire clk,
     input wire resetb
 );
 
 wire [63:0] consumeRatio;
-assign consumeRatio = propellentWeight/burntime; // 이 자체로는 그냥 비율(소수6째)
+assign consumeRatio = propellantWeight/burntime; // 이 자체로는 그냥 비율(소수6째)
 
-reg [63:0] usedPropellent;
-reg [63:0] usedPropellentForCalcul;
+reg [63:0] usedPropellant;
+reg [63:0] usedPropellantForCalcul;
 
 always @(posedge clk or negedge resetb) begin
-    afterWeight <= initialWeight - propellentWeight;
-    usedPropellent <= usedPropellent + 2*PERIOD*consumeRatio; // 소수6째까지 계산하고 있다.
-    usedPropellentForCalcul <= usedPropellent*SF; // 소수6자리까지 보기로 하자.
+    afterWeight <= initialWeight - propellantWeight;
+    usedPropellant <= usedPropellant + 2*PERIOD*consumeRatio; // 소수6째까지 계산하고 있다.
+    usedPropellantForCalcul <= usedPropellant*SF; // 소수6자리까지 보기로 하자.
 end 
 
 reg [63:0] mu;
 always @(*) begin
-    mu <= (initialWeight*ISF*ISF - usedPropellent) / initialWeight; // 분모가 소수6자리를 더 표현하고 있다. 소수 6자리까지
+    mu <= (initialWeight*ISF*ISF - usedPropellant) / initialWeight; // 분모가 소수6자리를 더 표현하고 있다. 소수 6자리까지
 end
 
 
@@ -52,7 +52,7 @@ always @(posedge clk or negedge resetb) begin
 end
 
 initial begin
-    usedPropellent = 0;
+    usedPropellant = 0;
 end
 /*
 initial begin

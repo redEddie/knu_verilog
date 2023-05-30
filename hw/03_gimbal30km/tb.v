@@ -8,7 +8,7 @@ getVelocity getVelocity_1(
     .afterWeight(AFTERWEIGHT),
     .specificImpulse(SPECIFICIMPULSE),
     .initialWeight(INITIALWEIGHT),
-    .propellentWeight(PROPELLENTWEIGHT),
+    .propellantWeight(PROPELLANTWEIGHT),
     .burntime(BURNTIME),
     .clk(CLK),
     .resetb(RESETB)
@@ -40,7 +40,7 @@ wire [63:0] AFTERWEIGHT;
     
 reg [63:0] SPECIFICIMPULSE;
 reg [63:0] INITIALWEIGHT;
-reg [63:0] PROPELLENTWEIGHT;
+reg [63:0] PROPELLANETWEIGHT;
 reg [63:0] BURNTIME;
 reg CLK;
 reg RESETB;
@@ -62,7 +62,7 @@ reg [63:0] elapsed;
 initial begin
     SPECIFICIMPULSE = 263;
     INITIALWEIGHT = 3233500;
-    PROPELLENTWEIGHT = 2077000;
+    PROPELLANTWEIGHT = 2077000;
     BURNTIME = 168;
 
     RESETB = 0;

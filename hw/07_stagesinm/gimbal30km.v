@@ -56,7 +56,7 @@ always @(posedge clk or negedge resetb) begin
         */
 end
 
-endmodule //30kmGimbal
+endmodule //gimbal30km
 /*
 30km일 때 gimbal enable을 1로 바꾸고, 각속도를 준다.
 */

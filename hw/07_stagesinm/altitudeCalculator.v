@@ -1,9 +1,9 @@
 module altitudeCalculator #(
     parameter N = 64,
-    parameter PIHALF = 1.546 * 10.0**3.0,
+    parameter PIHALF = 1_546,
     parameter SF = 10.0**-3.0,
     parameter ISF = 10.0**3.0,
-    parameter ANGLE30 = 30_000000,
+    parameter ANGLE30 = 10_000000000,
     parameter TARGETALTITUDE = 188000 // 목표 높이 188km
 
 )(
@@ -45,13 +45,15 @@ always @(posedge clk or negedge resetb) begin
     end
 end
 
-wire [7:0] index;
 wire [N-1:0] angle;
+wire [7:0] index;
 reg [N-1:0] sine;
 reg [N-1:0] cosine;
 
-assign angle = (180_000*ISF*ISF - angularVelocity*SF)/2 - angle_accumulation; // 소수6자리까지
-assign index = (angle*SF*SF/PIHALF)*256;
+assign angle = (180_000000000 - angularVelocity)/2 - angle_accumulation; // 소수9자리까지
+assign index = (angle*SF*SF/90_000)*256;
+// 우선 두개 소수 3자리로 맞추고 계산하면 비율로 소수가 없는데
+// 다시 소수 3자리까지 나타내자.
 
 always @(posedge clk or negedge resetb) begin
     if (~resetb) begin
