@@ -29,10 +29,28 @@ module altitudeCalculator #(
     input wire [N-1:0] noairAltitude,
     input wire [N-1:0] noairDistance,
     input wire [N-1:0] angularVelocity,
-    input wire [N-1:0] height,
+    input wire [N-1:0] velocity,
     input wire [N-1:0] currentAltitude
 );
 
+reg [N-1:0] minusvelocity;
+always @(posedge clk or negedge resetb) begin
+    if (~resetb) begin
+        minusvelocity <= 0;
+    end
+    else begin
+        minusvelocity <= velocity;
+    end
+end
+reg [N-1:0] fractiontraveled;
+always @(posedge clk or negedge resetb) begin
+    if (~resetb) begin
+        fractiontraveled <= 0;
+    end
+    else begin
+        fractiontraveled <= (PERIOD+PERIOD)*(velocity+minusvelocity)*0.5;
+    end
+end
 numericalIntegral cal_alt(
     .clk(clk),
     .resetb(resetb),
@@ -42,6 +60,9 @@ numericalIntegral cal_alt(
 );
 wire [N-1:0] deliver_altitude;
 always @(posedge clk or negedge resetb) begin
+    if (~resetb) begin
+        altitude <= 0;
+    end
     if (altitude_enable)
         altitude <= deliver_altitude;
 end
@@ -55,7 +76,10 @@ numericalIntegral cal_dist(
 );
 wire [N-1:0] deliver_distance;
 always @(posedge clk or negedge resetb) begin
-    if (distance_enable)
+    if (~resetb) begin
+        distance <= 0;
+    end
+    else if (distance_enable)
         distance <= deliver_distance;
 end
 
@@ -65,21 +89,6 @@ reg [15:0] SINE_ROM [0:255];
 reg [15:0] ISINE_ROM [0:255];
 // sine inverse는 소수 4자리까지 pi/2를 가져옴.
 // 필요한건 더적은데 예쁜건 16이니까.
-
-initial begin
-    minusheight = 0;
-    sine = 0;
-    cosine = 0;
-    angle_accumulation = ANGLE30;
-    altitude_enable = 0;
-    distance_enable = 0;
-    $display("Loading rom.");
-    $readmemh("sine_table_256x16.mem", SINE_ROM);
-    if (SINE_ROM[0] != 0) begin
-       $display("Loaded sine table");
-    end
-    $readmemh("isine_table_256x16.mem", ISINE_ROM);
-end
 
 
 
@@ -114,46 +123,42 @@ end
 wire [7:0] index;
 wire [15:0] angle;
 assign angle = (180_000 - angle_now)/2 - angle_accumulation*SF*SF;
+// assign index = 255;
 assign index = (angle/PIHALF)*256;
 
 // 이렇게 인덱스가 완성되었다. 256곱하기 전 계산이 나머지를 날려먹으니까 angle안에 최소단위가 몇개 들어있는지 반환할거야 거기 256을 곱했으니 잘 되겠지.
 // 소수점 때문에 이상하게 돌아가는 거 같아. 
 // for altitude
-reg [N-1:0] minusheight;
+reg [N-1:0] sine;
 always @(posedge clk or negedge resetb) begin
-    minusheight <= height;
-end
-
-
-
-reg [15:0] sine;
-always @(posedge clk or negedge resetb) begin
-    if (altitude_enable) begin
-        sine <= SINE_ROM[index]*ISF/SINE_ROM[255];
+    if (~resetb) begin
+        sine <= 0;
+    end
+    else if (altitude_enable) begin
+        sine <= SINE_ROM[index]*ISF*ISF/SINE_ROM[255]; // 사인값을 소수6자리까지 밯놘
     end
 end
 
-reg [N-1:0] fractionAltitude;
+reg [N-1:0] cosine;
 always @(posedge clk or negedge resetb) begin
-    fractionAltitude <= (height - minusheight)*sine*SF;
-    // sine : 소수 4째자리, height : 소수 9째자리 => 곱했을 때 13자리. 근데 9자리 원하니까 뒷 4자리 날려야함.
-    // 모자란 소수가 총 8자리니까 SF SF 하고 2승 더 해주면 되겠다.
-    // 최종적으로 소수9자리까지 표시하는 고도가 완성되었다.
-end
-
-reg [15:0] cosine;
-always @(posedge clk or negedge resetb) begin
-    if (distance_enable) begin
-        cosine <= SINE_ROM[255-index];
+    if (~resetb) begin
+        cosine <= 0;
+    end
+    else if (distance_enable) begin
+        cosine <= SINE_ROM[255-index]*ISF*ISF/SINE_ROM[255];
     end
 end
 // 코사인은 반대론데... 256에서 빼면 되나? 그러겠지머.
 
+reg [N-1:0] fractionAltitude;
+always @(posedge clk or negedge resetb) begin
+    fractionAltitude <= fractiontraveled*sine*SF**SF;
+    // sine : 소수 6째자리, height : 소수 9째자리 => 곱했을 때 15자리. 근데 9자리 원하니까 뒷 6자리 날려야함.
+end
+
 reg [N-1:0] fractionDistance;
 always @(posedge clk or negedge resetb) begin
-    // distance <= noairDistance + BIG_RADIAN*cosine*ISF*ISF*(10.0**2.0);
-    // 어차피 noairDis~가 0이잖아. 왜 더해주냐.
-    fractionDistance <= (height - minusheight)*cosine *10.0**-4.0;
+    fractionDistance <= fractiontraveled*cosine*SF*SF;
 end
 
 reg altitude_enable;
@@ -178,6 +183,18 @@ always @(posedge clk or negedge resetb) begin
     end
     else
         distance_enable <= 0;
+end
+
+initial begin
+    angle_accumulation = ANGLE30;
+    altitude_enable = 0;
+    distance_enable = 0;
+    $display("Loading rom.");
+    $readmemh("sine_table_256x16.mem", SINE_ROM);
+    if (SINE_ROM[0] != 0) begin
+       $display("Loaded sine table");
+    end
+    $readmemh("isine_table_256x16.mem", ISINE_ROM);
 end
 
 endmodule

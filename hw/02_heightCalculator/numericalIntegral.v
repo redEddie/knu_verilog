@@ -24,7 +24,7 @@ always @(posedge clk or negedge ~resetb) begin
     end
     else if (start_integration) begin
         // 입력신호가 소수 9자리고 (0.5는 서비스)
-        integral_result <= integral_result + (`PERIOD+`PERIOD)*(signal+next_signal)**0.5;
+        integral_result <= integral_result + (`PERIOD+`PERIOD)*(signal+next_signal)*0.5;
     end
 end
 

@@ -230,7 +230,7 @@ altitudeCalculator altitude_1(
     .noairAltitude(NOAIR_ALTITUDE),
     .noairDistance(NOAIR_DISTANCE),
     .angularVelocity(ANGULER_VELOCITY),
-    .height(HEIGHT),
+    .velocity(DELIVER_VELOCITY),
     .currentAltitude(CURRENTALTITUDE)
 );
 
