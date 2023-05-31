@@ -74,12 +74,13 @@ always @(negedge STAGEMANAGER) begin
     end
 end
 
+/*
 always @(posedge CLK or negedge RESETB) begin
     if ((~RESETB) || (STAGEMANAGER)) begin
         IGNITION_END <= 0;
     end
 end
-
+*/
 always @(posedge CLK or negedge RESETB) begin
     if (~RESETB) begin
         SPECIFICIMPULSE <= 0;
@@ -305,14 +306,14 @@ always @(posedge CLK or negedge RESETB) begin
         $display("시간 : %04ds", $time/SCALE);
         #1_000; 
     end */
-    else if ((~PRINT30KM) && (STAGESTATE == 4'd1)) begin
+    else if ((~PRINT30KM) && (NOAIR_ALTITUDE > 5)) begin
         $display("saturn V reached 30km height... @ %04ds", $time/SCALE); 
-        PRINT30KM <= 1;
         $display(">>> gimbal start...");
         $display(">>> current altitude : %f km", CURRENT_ALTITUDE*SF*SF*SF*SF);
         $display(">>> current distance : %f km", CURRENTDISTANCE*SF*SF*SF*SF);
         $display(">>> current velocity : %f km/s", VELOCITY*SF*SF*SF*SF);
         $display("");
+        PRINT30KM <= 1;
         #1_000;
     end
 
