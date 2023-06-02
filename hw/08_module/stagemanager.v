@@ -1,5 +1,4 @@
 module stagemanager#(
-    parameter TARGETALTITUDE = 188, // 원랜 188인데 도달하기 불가능
     parameter SCALE = 1000,
     parameter PERIOD = 10,
     parameter N = 64,

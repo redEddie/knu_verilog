@@ -8,8 +8,7 @@ module gimbal30km #(
     parameter N = 64,
     parameter SF = 10.0**-3.0,
     parameter ISF = 10.0**3.0,
-    parameter TARGETALTITUDE = 188000, // 목표 높이 188km
-    parameter radianBig = 4000_000 // 4000km
+    parameter radianBig = 400_000 // 4000km
 )(
     output reg [N-1:0] angularVelocity,
     output reg [N-1:0] noairAltitude,

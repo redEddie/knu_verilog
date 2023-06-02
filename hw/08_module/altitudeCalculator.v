@@ -3,7 +3,7 @@ module altitudeCalculator #(
     parameter PIHALF = 1_546,
     parameter SF = 10.0**-3.0,
     parameter ISF = 10.0**3.0,
-    parameter ANGLE30 = 10_000000000,
+    parameter ANGLE30 = 30_000000000,
     parameter TARGETALTITUDE = 188000 // 목표 높이 188km
 
 )(
